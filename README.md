@@ -17,6 +17,11 @@ Run 3 simple scripts to synthesize images (by putting your template images onto 
 The core code of Yolo is copied from [this repo](https://github.com/eriklindernoren/PyTorch-YOLOv3), and is stored in [src/PyTorch_YOLOv3](src/PyTorch_YOLOv3). I modified its frontend code to meet my need.
 
 **Demo:**  
+The raw training data for this demo are:    
+(1) 4 template images.  
+(2) 25 background images downloaded directly from google.  
+The parameters are set in [config/config.yaml](config/config.yaml). The details will be illustrated below.
+
 <p align = "center">
   <img src = "doc/demo_1.gif" height = "240px">
   <img src = "doc/demo_2.gif" height = "240px">
@@ -58,6 +63,9 @@ In [config/config.yaml](config/config.yaml), set the "data_name" and "data_label
 data_name: "custom1" # Your data folder will be "data/data_name/"
 data_labels: ["bottle", "meter"] # class names of the target objects
 ```
+
+Set the "template_aug_effects" to meet your need.  
+The other settings are also illustrated in that yaml file.
 
 ### 2.2.2 Folders
 Create a folder "data/data_name/", such as "data/custom1/". Create the following subfolders:
