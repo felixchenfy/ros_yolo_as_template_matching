@@ -72,12 +72,12 @@ template_img/
 ├── meter_1.jpg
 └── meter_2.jpg
 ```
-For example, [meter_1.jpg](data/custom1/template_img/meter_1.jpg) as shown in (a) below.  
+For example, [meter_1.jpg](data/custom1/template_img/meter_1.jpg) as shown in figure (a) below.  
 
 ![doc/fig2_data.png](doc/fig2_data.png)
 
 #### 2.2.4 template_mask
-Copy the above images to [data/custom1/template_mask/](data/custom1/template_mask/). Use image editing tool to mask them as shown in (b) above.
+Copy the above images to [data/custom1/template_mask/](data/custom1/template_mask/). Use image editing tool to mask them as shown in figure (b) above.
 
 Format 1: Color/Gray image, where white is the object.  
 Format 2: Image with transparency channel (a 4-channel image). The non-transparent region is the object.
@@ -90,16 +90,19 @@ template_mask/
 ```
 #### 2.2.5 background
 
-I downloaded 25 images from google by using[googleimagesdownload](https://github.com/hardikvasa/google-images-download) and the command:
+I downloaded 25 images from google by using [googleimagesdownload](https://github.com/hardikvasa/google-images-download) and the command:
 > $ googleimagesdownload --keywords "room images" --limit 25
 
-These background images are stored in [data/custom1/template_mask/](data/custom1/background/)
+Copy these background images into [data/custom1/template_mask/](data/custom1/background/)
 
-You should add images of your own working environment. That will improve the detection precision.
+It'll be better to add the background images of your own scenes, which increases the detection precision.
 
 ## 2.3 Synthesize images and setup yolo
+
+Run:  
 > $ source s1_main_setup.sh
 ```
+#!/bin/bash
 python main_setup.py                \
     --verify_mask           True    \
     --augment_imgs          True    \
@@ -136,12 +139,15 @@ python src/train.py \
     --pretrained_weights weights/darknet53.conv.74 \
     --batch_size 4 
 ```
+The weights are saved to the [checkpoints/](checkpoints) folder.
+
 ## 2.5 Test
 
 ### 2.5.1 Detecting multiple images
-For detecting from (1) webcam, (2) folder, (3) video, please see [s3_inference_images.sh](s3_inference_images.sh).
+For detecting from (1) webcam, (2) folder, or (3) video,  
+please see [s3_inference_images.sh](s3_inference_images.sh).
 
-Select the "data_source" and "image_data_path", and then run:  
+Select one of the "data_source" and "image_data_path", and then run:  
 > $ source s3_inference_images.sh  
 
 A snippet of code is shown below: 
@@ -156,18 +162,8 @@ python src/detect_images.py \
 ```
 
 ### 2.5.2 Detecting one image
-For detecting from an image, please see [s4_inference_one_image.sh](s4_inference_one_image.sh), and then run:  
+For detecting from an image, please modify the **image_filename** in [s4_inference_one_image.sh](s4_inference_one_image.sh), and then run:  
 > $ source s4_inference_one_image.sh  
-
-A snippet of code is shown below: 
-``` 
-python src/detect_one_image.py \
-    --weights_path "weights/yolo_trained.pth" \
-    --conf_thres 0.9 \
-    --nms_thres 0.3 \
-    --batch_size 1 \
-    --image_filename $image_filename
-```
 
 # 3. Reference
 https://github.com/eriklindernoren/PyTorch-YOLOv3
