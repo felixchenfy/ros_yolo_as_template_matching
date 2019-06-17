@@ -36,7 +36,7 @@ The parameters are set in [config/config.yaml](config/config.yaml). The details 
 2. Install dependencies. See here: [doc/dependencies.md](doc/dependencies.md).
 
 
-## 2.1 All commands
+## 2.1 All commands ready to run
 
 I've prepared the examplar images, settings and codes.  
 You can directly run the following commands:
@@ -76,7 +76,7 @@ data/custom1
 └── template_mask
 ```
 
-#### 2.2.3 template_img
+### 2.2.3 template_img
 Put your template images into [data/custom1/template_img/](data/custom1/template_img/) with a name of "name_index" and suffix of ".jpg" or ".png".  
 ```
 template_img/
@@ -89,7 +89,7 @@ For example, [meter_1.jpg](data/custom1/template_img/meter_1.jpg) as shown in fi
 
 ![doc/fig2_data.png](doc/fig2_data.png)
 
-#### 2.2.4 template_mask
+### 2.2.4 template_mask
 Copy the above images to [data/custom1/template_mask/](data/custom1/template_mask/). Use image editing tool to mask them as shown in figure (b) above.
 
 Format 1: Color/Gray image, where white is the object.  
@@ -101,7 +101,7 @@ template_mask/
 ├── meter_1.jpg
 └── meter_2.png
 ```
-#### 2.2.5 background
+### 2.2.5 background
 
 I downloaded 25 images from google by using [googleimagesdownload](https://github.com/hardikvasa/google-images-download) and the command:
 > $ googleimagesdownload --keywords "room images" --limit 25
@@ -162,6 +162,8 @@ please see [s3_inference_images.sh](s3_inference_images.sh).
 
 Select one of the "data_source" and "image_data_path", and then run:  
 > $ source s3_inference_images.sh  
+
+The result is saved to [output/](output/) folder.
 
 A snippet of code is shown below: 
 ``` 
