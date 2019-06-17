@@ -4,4 +4,4 @@ python src/train.py \
     --learning_rate 0.001 \
     --checkpoint_interval 10 \
     --pretrained_weights weights/darknet53.conv.74 \
-    --batch_size 4 
+    --batch_size 2 

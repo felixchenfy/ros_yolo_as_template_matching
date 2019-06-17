@@ -16,11 +16,6 @@ Run 3 simple scripts to synthesize images (by putting your template images onto 
 **Reference**:  
 The core code of Yolo is copied from [this repo](https://github.com/eriklindernoren/PyTorch-YOLOv3), and is stored in [src/PyTorch_YOLOv3](src/PyTorch_YOLOv3). I modified its frontend code to meet my need.
 
-**Weights and Dependencies:** 
-1. Download weights. See [weights/README.md](weights/README.md).
-2. Install dependencies. See here: [doc/dependencies.md](doc/dependencies.md).
-
-
 **Demo:**  
 <p align = "center">
   <img src = "doc/demo_1.gif" height = "240px">
@@ -31,15 +26,26 @@ The core code of Yolo is copied from [this repo](https://github.com/eriklinderno
 
 # 2. How to run
 
+## 2.0 Weights and Dependencies 
+1. Download weights. See [weights/README.md](weights/README.md).
+2. Install dependencies. See here: [doc/dependencies.md](doc/dependencies.md).
+
+
 ## 2.1 All commands
 
-I've prepared the examplar images, settings and codes. You can directly run the commands below:
+I've prepared the examplar images, settings and codes.  
+You can directly run the following commands:
 
 ```
-source s1_main_setup.sh
-source s2_train.sh
-source s3_inference_images.sh
-source s4_inference_one_image.sh
+source s1_main_setup.sh             # synthesize images and set up yolo files
+source s3_inference_images.sh       # detecting objects from webcam, folder, or video.
+source s4_inference_one_image.sh    # detecting objects from an image
+```
+
+After synthesizing images and setting yolo by running "source s1_main_setup.sh",  
+you can run:
+```
+source s2_train.sh                  # train yolo
 ```
 
 For more details, please read the following instructions.
@@ -47,11 +53,10 @@ For more details, please read the following instructions.
 ## 2.2 Prepare data
 
 ### 2.2.1 Config
-In [config/config.yaml](config/config.yaml), set the "data_name" and "data_labels".
+In [config/config.yaml](config/config.yaml), set the "data_name" and "data_labels" to yours.
 ```
 data_name: "custom1" # Your data folder will be "data/data_name/"
 data_labels: ["bottle", "meter"] # class names of the target objects
-
 ```
 
 ### 2.2.2 Folders
@@ -128,7 +133,7 @@ If you want to add your labeled data, you can put your data into the "images/" a
 
 > $ python main_setup.py --setup_yolo True
 
-## 2.4 Train
+## 2.4 Train Yolo
 
 > $ source s2_train.sh
 ```
@@ -141,7 +146,7 @@ python src/train.py \
 ```
 The weights are saved to the [checkpoints/](checkpoints) folder.
 
-## 2.5 Test
+## 2.5 Test Detection
 
 ### 2.5.1 Detecting multiple images
 For detecting from (1) webcam, (2) folder, or (3) video,  

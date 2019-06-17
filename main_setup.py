@@ -246,9 +246,6 @@ def parse_args():
     
 def main(args):
     
-    '''
-    python src/main.py --augment_imgs true --setup_yolo true
-    '''
     
     ALL_ON = False # Turn on all functions. For debug only.
     
