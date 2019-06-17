@@ -1,0 +1,11 @@
+numpy
+matplotlib
+tensorflow==1.13.1
+tensorboard==1.13.0
+terminaltables
+pillow
+tqdm
+scikit-image
+pyyaml
+imageio
+imgaug
