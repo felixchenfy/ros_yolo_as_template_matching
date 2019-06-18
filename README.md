@@ -4,6 +4,8 @@
 **Abstract:**  
 Run 3 simple scripts to synthesize images (by putting your template images onto backgrounds), train yolo, and achieve template matching.
 
+![](doc/demo_of_image_aug.gif)
+
 **Features:**  
 1. Detect objects whose appearance doesn't change much.
 2. Save time from the boring labeling of training data. All you need is several *template images*, their *masks*, and some *background images*.   
