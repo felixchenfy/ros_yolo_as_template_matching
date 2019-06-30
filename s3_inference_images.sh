@@ -3,7 +3,14 @@
 # -- 1. Move trained weight file to weights/yolo_trained.ckpt
 mv checkpoints/yolov3_ckpt_100.pth weights/yolo_trained.pth 2>/dev/null || :
 
-# -- 2. Select one of the 3 data sources by commenting out the other two
+# -- 2. Setup yolo config files
+python main_setup.py                 \
+    --verify_mask           False    \
+    --augment_imgs          False    \
+    --setup_train_test_txt  False    \
+    --setup_yolo            True   
+
+# -- 3. Select one of the 3 data sources by commenting out the other two
 
 # data_source="webcam"
 # image_data_path="none"
@@ -14,7 +21,7 @@ mv checkpoints/yolov3_ckpt_100.pth weights/yolo_trained.pth 2>/dev/null || :
 data_source="video"
 image_data_path="data/custom1_eval/video.avi"
 
-# -- 3. Start detecting
+# -- 4. Start detecting
 
 python src/detect_images.py \
     --weights_path "weights/yolo_trained.pth" \

@@ -41,7 +41,7 @@ The parameters are set in [config/config.yaml](config/config.yaml). The details 
 ## 2.1 All commands ready to run
 
 I've prepared the examplar images, settings and codes.  
-You can directly run the following commands:
+You can directly run either one of the following commands:
 
 ```
 source s1_main_setup.sh             # synthesize images and set up yolo files
@@ -121,6 +121,7 @@ Run:
 python main_setup.py                \
     --verify_mask           True    \
     --augment_imgs          True    \
+    --setup_train_test_txt  True    \
     --setup_yolo            True    
 ```
 

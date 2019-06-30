@@ -182,7 +182,7 @@ def augment_images(args):
     
     return 
 
-def setup_yolo_files(args):
+def setup_train_test_txt(args):
     
     # Train/valid split and write to train.txt and valid.txt
     fnames = cf.get_filenames(args.f_yolo_images)
@@ -190,7 +190,7 @@ def setup_yolo_files(args):
     fname_trains, fname_valids = cf.train_valid_split(fnames, ratio_train=rt)
     cf.write_list(args.f_yolo_train, fname_trains)
     cf.write_list(args.f_yolo_valid, fname_valids)
-    print("Split all all images into [train/valid={:.2f}/{:.2f}]:".format(rt, 1-rt))
+    print("Split all images into [train/valid={:.2f}/{:.2f}]:".format(rt, 1-rt))
     print("\t{}".format(args.f_yolo_train))
     print("\t{}".format(args.f_yolo_valid))
     
@@ -200,6 +200,7 @@ def setup_yolo_files(args):
     cf.copy_files(fname_valids, args.f_yolo_valid_images)
     print("\tSave valid images into {args.f_yolo_valid_images}")
     
+def setup_yolo_files(args):
     # Write yolo.cfg, which is yolo's network configurations file
     n_labels = len(args.labels)
     yolo_config = YoloConfig(NUM_CLASSES=n_labels)
@@ -228,10 +229,16 @@ def parse_args():
     
     # Command line args
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config_file", type=str, default="config/config.yaml", help="path to config file")
-    parser.add_argument("--verify_mask", type=MyBool, default=False, help="Whether write masked templates to file for user to verify if mask is correct or not")
-    parser.add_argument("--augment_imgs", type=MyBool, default=False, help="Whether do image augment and create many new images")
-    parser.add_argument("--setup_yolo", type=MyBool, default=False, help="Setup config files for yolo: yolo.cfg, yolo.data, train.txt, valid.txt")
+    parser.add_argument("--config_file", type=str, default="config/config.yaml", 
+                        help="path to config file")
+    parser.add_argument("--verify_mask", type=MyBool, default=False, 
+                        help="Whether write masked templates to file for user to verify if mask is correct or not")
+    parser.add_argument("--augment_imgs", type=MyBool, default=False, 
+                        help="Whether do image augment and create many new images")
+    parser.add_argument("--setup_train_test_txt", type=MyBool, default=False, 
+                        help="Setup train.txt and valid.txt for yolo. Copy validation images to a new folder.")
+    parser.add_argument("--setup_yolo", type=MyBool, default=False, 
+                        help="Setup yolo.cfg, yolo.data, ")
     parser.add_argument("--create_bash_for_yolo", type=MyBool, default=False, help="Create two bash scripts for trainning yolo and doing inference: s2_train.sh & s3_inference.sh")
     args_from_command_line = parser.parse_args()
     
@@ -258,6 +265,10 @@ def main(args):
     
     if ALL_ON or args.augment_imgs: # This takes time, so I use args to specify whether do this or not
         augment_images(args)
+    
+    
+    if ALL_ON or args.setup_train_test_txt:
+        setup_train_test_txt(args)
     
     if ALL_ON or args.setup_yolo:
         setup_yolo_files(args)
