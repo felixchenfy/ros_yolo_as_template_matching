@@ -62,7 +62,7 @@ For more details, please read the following instructions.
 ### 2.2.1 Config
 In [config/config.yaml](config/config.yaml), set the "data_name" and "data_labels" to yours.
 ```
-data_name: "custom1" # Your data folder will be "data/data_name/"
+data_name: "custom1" # Your data folder will be "data/custom1/"
 data_labels: ["bottle", "meter"] # class names of the target objects
 ```
 
@@ -70,7 +70,7 @@ Set the "template_aug_effects" to meet your need.
 The other settings are also illustrated in that yaml file.
 
 ### 2.2.2 Folders
-Create a folder "data/data_name/", such as "data/custom1/". Create the following subfolders:
+Create a folder "data/$data_name/", such as "data/custom1/". Create the following subfolders:
 ```
 data/custom1
 ├── background
