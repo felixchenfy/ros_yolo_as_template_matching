@@ -5,7 +5,7 @@ data_labels: ["bottle", "meter"] # class names of the target objects
 img_aug_nums:
 # Format: [l, r] means uniformly select a value Implicitly between [l, r]
   "num_new_images": 1000 # How many training images with labels we want to generate 
-  "objects_per_image": [0, 8] # How many objects per image
+  "objects_per_image": [0, 6] # How many objects per image
 
 yolo:
   "ratio_train": 0.8 # percentage of images for training (in "train.txt"); The rest goes into "valid.txt".

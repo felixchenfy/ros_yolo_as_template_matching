@@ -94,13 +94,18 @@ def set_args():
     print("\nArgs:\n", args)
     return args 
     
+DEBUG_MODE = False # Set to false if not doing debug
 
 if __name__ == "__main__":
     
     args = set_args()    
     logger = Logger("logs")
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+    if DEBUG_MODE:
+        device = torch.device("cpu")
+        args.n_cpu = 0
+    else:
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        
 
     # Print settings
     IF_PRINT_LOG_STR = True
