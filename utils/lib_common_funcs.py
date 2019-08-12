@@ -7,11 +7,14 @@ import io, yaml
 import types 
 import time
 from shutil import copyfile
+from datetime import datetime
+import json
+import yaml
 
 # IO ----------------------------------------------------------------
 
 def create_folder(folder):
-    if not os.path.exists(folder):
+    if folder and not os.path.exists(folder):
         print("Creating folder:", folder)
         os.makedirs(folder)
         
@@ -27,6 +30,12 @@ def load_yaml(filename):
         data_loaded = yaml.safe_load(stream)
     return data_loaded
 
+def write_dict(filename, dic):
+    create_folder(os.path.dirname(filename))
+    with open(filename, 'w') as f:
+        yaml.dump(dic, f)
+        # f.write(yaml.dump(dic))
+        # f.write(json.dumps(dic))
 
 def write_list(filename, arr):
     ''' Write list[] to file. Each element takes one row. '''
@@ -70,6 +79,18 @@ def split_name(name):
         name = pre 
     return path, name, ext
 
+def get_readable_time(no_blank=False):
+    ''' Get the readable time of UTC 0
+    '''
+    ts = time.time()
+    # if you encounter a "year is out of range" error the timestamp
+    # may be in milliseconds, try `ts /= 1000` in that case
+    if no_blank:
+        readable_time = datetime.utcfromtimestamp(ts).strftime('%Y%m%d%H%M%S')
+    else:
+        readable_time = datetime.utcfromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+    return readable_time
+
 # Train DL ----------------------------------------------------------------------------------
 
 def train_valid_split(filenames, ratio_train=0.8):
@@ -99,9 +120,14 @@ class Timer(object):
         self.t0 = time.time()
         
 if __name__ == "__main__":
+    
     def test_split_name():
         name = "/usr/lib/image.jpg"
         res = split_name(name)
         print(res)
         
-    test_split_name()
+    t0 = get_readable_time()
+    print(t0)
+    
+    dic = {"da": 123, "ad": 321}
+    write_dict("test.yaml", dic)

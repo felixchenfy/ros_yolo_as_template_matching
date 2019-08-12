@@ -4,6 +4,8 @@ if 1: # Set path
     sys.path.append(ROOT)
     from config.config import read_all_args
     
+import utils.lib_common_funcs as cf 
+
 from src.PyTorch_YOLOv3.models import *
 from src.PyTorch_YOLOv3.utils.logger import *
 from src.PyTorch_YOLOv3.utils.utils import *
@@ -82,6 +84,12 @@ def set_args():
     training_args = set_training_args()
     args.__dict__.update(training_args.__dict__)
     
+    # 4. Folder to save model
+    save_model_to = "checkpoints/" + cf.get_readable_time(no_blank=True) + "/"
+    cf.create_folder(save_model_to)
+    args.save_model_to = save_model_to
+    cf.write_dict(save_model_to + "configs.yaml", args.__dict__)
+    
     # return
     print("\nArgs:\n", args)
     return args 
@@ -97,10 +105,6 @@ if __name__ == "__main__":
     # Print settings
     IF_PRINT_LOG_STR = True
     
-    # Check folders
-    os.makedirs("output", exist_ok=True)
-    os.makedirs("checkpoints", exist_ok=True)
-
     # Get data configuration
     data_config = parse_data_config(args.data_config)
     train_path = data_config["train"]
@@ -236,7 +240,7 @@ if __name__ == "__main__":
             print(f"---- mAP {AP.mean()}")
 
         if epoch % args.checkpoint_interval == 0:
-            torch.save(model.state_dict(), f"checkpoints/yolov3_ckpt_%d.pth" % epoch)
- 
+            torch.save(model.state_dict(), args.save_model_to + "yolov3_ckpt_%d.pth" % epoch)
+
  
  

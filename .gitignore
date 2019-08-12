@@ -1,0 +1,17 @@
+
+*.png
+*.jpg
+*.avi
+*.pth
+*.zip
+*.pyc
+
+weights
+checkpoints
+
+**/.vscode/*
+**/__pycache__/*
+**/.ipynb_checkpoints/*
+
+
+
