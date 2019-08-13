@@ -11,10 +11,10 @@ yolo:
   "ratio_train": 0.8 # percentage of images for training (in "train.txt"); The rest goes into "valid.txt".
 
 template_aug_effects: 
-  "rela_size" :  [0.03, 0.12] # template's relative size wrt background image
+  "rela_size" :  [0.03, 0.15] # template's relative size wrt background image
   "rescale" : [1.0, 1.8] # rescale template
   "rotation" : [-90, 90] # rotate template
-  "shear" : [-0.2, 0.2] # shear template
+  "shear" : [-0.25, 0.25] # shear template
   "translate_x" : [0, 1] # translate template on the background image.
   "translate_y" : [0, 1] #    (x=0, y=0) is left-up, and (x=1, y=1) is bottom-right corner
   "brightness_offset" : [-30, 30] # inc/decrease the brightness of template image

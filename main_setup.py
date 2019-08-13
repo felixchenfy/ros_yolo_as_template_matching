@@ -190,7 +190,7 @@ def setup_train_test_txt(args):
     fname_trains, fname_valids = cf.train_valid_split(fnames, ratio_train=rt)
     cf.write_list(args.f_yolo_train, fname_trains)
     cf.write_list(args.f_yolo_valid, fname_valids)
-    print("Split all images into [train/valid={:.2f}/{:.2f}]:".format(rt, 1-rt))
+    print("Split all {} images into [train/valid={:.2f}/{:.2f}]:".format(len(fnames), rt, 1-rt))
     print("\t{}".format(args.f_yolo_train))
     print("\t{}".format(args.f_yolo_valid))
     
@@ -198,7 +198,7 @@ def setup_train_test_txt(args):
     if os.path.isdir(args.f_yolo_valid_images):
         shutil.rmtree(args.f_yolo_valid_images)
     cf.copy_files(fname_valids, args.f_yolo_valid_images)
-    print("\tSave valid images into {args.f_yolo_valid_images}")
+    print("\tSave valid images into {}".format(args.f_yolo_valid_images))
     
 def setup_yolo_files(args):
     # Write yolo.cfg, which is yolo's network configurations file
