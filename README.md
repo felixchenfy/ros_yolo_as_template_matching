@@ -185,3 +185,12 @@ For detecting from an image, please modify the **image_filename** in [s4_inferen
 
 # 3. Reference
 https://github.com/eriklindernoren/PyTorch-YOLOv3
+
+# 4. Trouble shooting
+
+* ImportError: bad magic number in 'config': b'\x03\xf3\r\n'  
+    $ find . -name \*.pyc -delete 
+* Error in this sentence: "noobj_mask[b[i], anchor_ious > ignore_thres, gj[i], gi[i]] = 0"  
+    I met this bug once. I guess it's because the bounding box goes out of the image border.  
+    I solved it by deleting the data and augment again: "rm data/custom1_generated/".  
+    I can't reproduce this bug again, and I haven't solve the bug in the code.   
