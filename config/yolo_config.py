@@ -1,3 +1,6 @@
+# -*- coding: future_fstrings -*-
+from __future__ import division
+
 ''' Provide a class to write yolo configs to file '''
 
 def test_yolo_config():
@@ -16,7 +19,7 @@ class YoloConfig(object):
     def write_to_file(self, filename):
         with open(filename, 'w') as f:
             f.write(self.str_yolo_config)
-        print("Write yolo config to:", filename)
+        print("Write yolo config to: ", filename)
 
 
 def set_yolo_config(NUM_CLASSES):

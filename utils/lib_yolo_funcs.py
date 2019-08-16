@@ -1,12 +1,21 @@
+# -*- coding: future_fstrings -*-
+from __future__ import division
+
 if 1: # Set path
     import sys, os
     ROOT = os.path.dirname(os.path.abspath(__file__))+"/../" # root of the project
     sys.path.append(ROOT)
-    
-from src.PyTorch_YOLOv3.models import Darknet
-from src.PyTorch_YOLOv3.utils.utils import non_max_suppression, load_classes
-from src.PyTorch_YOLOv3.utils.datasets import ImgfolderDataset
 
+import sys
+if sys.version[0:3] == "2.7":
+    from src.PyTorch_YOLOv3.models import Darknet
+    from src.PyTorch_YOLOv3.utils.utils import non_max_suppression, load_classes
+    from src.PyTorch_YOLOv3.utils.datasets import ImgfolderDataset
+else:
+    from src.PyTorch_YOLOv3.models import Darknet
+    from src.PyTorch_YOLOv3.utils.utils import non_max_suppression, load_classes
+    from src.PyTorch_YOLOv3.utils.datasets import ImgfolderDataset
+    
 from utils.lib_yolo_datasets import ImgfolderDataset, UsbcamDataset, VideofileDataset
 from utils.lib_common_funcs import Timer
 

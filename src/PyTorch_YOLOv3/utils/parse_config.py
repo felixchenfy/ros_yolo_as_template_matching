@@ -1,4 +1,4 @@
-
+from __future__ import division
 
 def parse_model_config(path):
     """Parses the yolo-v3 layer configuration file and returns module definitions"""

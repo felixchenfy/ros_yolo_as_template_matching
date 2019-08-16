@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 #!/usr/bin/env python3
 ''' 
 Setup all things. See help:

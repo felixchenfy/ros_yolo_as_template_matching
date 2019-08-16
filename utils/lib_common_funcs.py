@@ -1,4 +1,5 @@
-
+# -*- coding: future_fstrings -*-
+from __future__ import division
 
 import numpy as np 
 import glob
@@ -40,7 +41,7 @@ def write_dict(filename, dic):
 def write_list(filename, arr):
     ''' Write list[] to file. Each element takes one row. '''
     create_folder(os.path.dirname(filename))
-    with open(file=filename, mode='w') as f:
+    with open(filename, mode='w') as f:
         for s in arr:
             s = s if isinstance(s, str) else str(s) # to string
             f.write(s + "\n") 
@@ -60,7 +61,8 @@ def write_listlist(filename, arrarr):
             f.write("\n")
 
 def copy_files(src_filenames, dst_folder):
-    os.makedirs(dst_folder, exist_ok=True)
+    if not os.path.exists(dst_folder):
+        os.makedirs(dst_folder)
     for name_with_path in src_filenames:
         basename = os.path.basename(name_with_path)
         copyfile(src=name_with_path, dst=dst_folder + "/" + basename)
@@ -102,8 +104,21 @@ def train_valid_split(filenames, ratio_train=0.8):
     return fname_trains, fname_valids
 
 # ----------------------------------------------------------------------------------
+class SimpleNamespace:
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+
+    def __repr__(self):
+        keys = sorted(self.__dict__)
+        items = ("{}={!r}".format(k, self.__dict__[k]) for k in keys)
+        return "{}({})".format(type(self).__name__, ", ".join(items))
+
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+    
 def dict2class(args_dict):
-    args = types.SimpleNamespace()
+    # args = types.SimpleNamespace() # for python 2, this doesn't work
+    args = SimpleNamespace() 
     args.__dict__.update(**args_dict)
     return args 
 

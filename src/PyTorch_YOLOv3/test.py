@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 from __future__ import division
 
 from .models import *

@@ -9,3 +9,4 @@ scikit-image
 pyyaml
 imageio
 imgaug
+future-fstrings

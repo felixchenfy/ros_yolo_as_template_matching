@@ -1,3 +1,5 @@
+# -*- coding: future_fstrings -*-
+from __future__ import division
 
 ''' Datasets for image yolo '''
 '''

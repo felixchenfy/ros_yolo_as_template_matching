@@ -1,3 +1,6 @@
+# -*- coding: future_fstrings -*-
+from __future__ import division
+
 ''' Datasets for image augmentation '''
 
 if 1: # Set path
