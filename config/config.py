@@ -1,3 +1,5 @@
+from __future__ import division
+
 ''' Usage:
 In the main script, import "read_all_args" function
 In this script, modify parameters only "set_fixed_arguments" function

@@ -15,12 +15,12 @@ python main_setup.py                 \
 # data_source="webcam"
 # image_data_path="none"
 
-data_source="folder"
-image_data_path="data/custom1_eval/"
-image_data_path="data/custom1_generated/valid_images/"
+# data_source="folder"
+# image_data_path="data/custom1_eval/"
+# image_data_path="data/custom1_generated/valid_images/"
 
-# data_source="video"
-# image_data_path="data/custom1_eval/video.avi"
+data_source="video"
+image_data_path="data/custom1_eval/video.avi"
 
 # -- 4. Start detecting
 

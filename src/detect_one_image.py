@@ -1,9 +1,13 @@
 # -*- coding: future_fstrings -*-
+from __future__ import division
+
 if 1: # Set path
     import sys, os
     ROOT = os.path.dirname(os.path.abspath(__file__))+"/../" # root of the project
     sys.path.append(ROOT)
     from config.config import read_all_args
+    import warnings
+    warnings.filterwarnings("ignore")
     
 import os
 import sys

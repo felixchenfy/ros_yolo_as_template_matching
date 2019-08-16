@@ -1,9 +1,13 @@
 # -*- coding: future_fstrings -*-
+from __future__ import division
+
 if 1: # Set path
     import sys, os
     ROOT = os.path.dirname(os.path.abspath(__file__))+"/../" # root of the project
     sys.path.append(ROOT)
     from config.config import read_all_args
+    import warnings
+    warnings.filterwarnings("ignore")
     
 import os
 import sys
@@ -64,8 +68,10 @@ if __name__ == "__main__":
     IF_SINGLE_INSTANCE = False # single instance for each class
     
     # Save result data to this folder
-    os.makedirs("output", exist_ok=True)
-    
+    OUTPUT_FOLDER = "output"
+    if not os.path.exists(OUTPUT_FOLDER):
+        os.makedirs(OUTPUT_FOLDER)
+
     # Init vars
     model = yolo.create_model(args)
     dataloader = yolo.set_dataloader(args)

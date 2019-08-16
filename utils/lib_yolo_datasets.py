@@ -1,4 +1,6 @@
 # -*- coding: future_fstrings -*-
+from __future__ import division
+
 ''' Datasets for image yolo '''
 '''
 Part of this script if copied from "src/PyTorch_YOLOv3/utils/datasets.py" and then modified

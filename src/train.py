@@ -1,4 +1,6 @@
 # -*- coding: future_fstrings -*-
+from __future__ import division
+
 if 1: # Set path
     import sys, os
     ROOT = os.path.dirname(os.path.abspath(__file__))+"/../" # root of the project
