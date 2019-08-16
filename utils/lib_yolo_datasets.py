@@ -1,4 +1,4 @@
-
+# -*- coding: future_fstrings -*-
 ''' Datasets for image yolo '''
 '''
 Part of this script if copied from "src/PyTorch_YOLOv3/utils/datasets.py" and then modified

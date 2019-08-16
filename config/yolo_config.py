@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 ''' Provide a class to write yolo configs to file '''
 
 def test_yolo_config():

@@ -1,4 +1,4 @@
-
+# -*- coding: future_fstrings -*-
 
 import cv2
 import numpy as np

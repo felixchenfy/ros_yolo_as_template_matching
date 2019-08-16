@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 if 1: # Set path
     import sys, os
     ROOT = os.path.dirname(os.path.abspath(__file__))+"/../" # root of the project
@@ -33,7 +34,7 @@ def set_arguments():
     # Set default args
     parser = argparse.ArgumentParser()
     parser.add_argument("--weights_path", type=str, default="weights/yolov3.weights", help="path to weights file")
-    parser.add_argument("--conf_thres", type=float, default=0.8, help="object confidence threshold")
+    parser.add_argument("--conf_thres", type=float, default=0.95, help="object confidence threshold")
     parser.add_argument("--nms_thres", type=float, default=0.4, help="iou thresshold for non-maximum suppression")
     parser.add_argument("--batch_size", type=int, default=1, help="size of the batches")
     parser.add_argument("--img_size", type=int, default=416, help="size of each image dimension")

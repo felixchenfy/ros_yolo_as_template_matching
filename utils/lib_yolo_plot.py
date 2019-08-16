@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 ''' API for plotting:
 
 -- class Yolo_Detection_Plotter_by_very_slow_plt:

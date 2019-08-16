@@ -1,17 +1,29 @@
+# -*- coding: future_fstrings -*-
 if 1: # Set path
     import sys, os
     ROOT = os.path.dirname(os.path.abspath(__file__))+"/../" # root of the project
     sys.path.append(ROOT)
     from config.config import read_all_args
+    import warnings
+    warnings.filterwarnings("ignore")
     
 import utils.lib_common_funcs as cf 
 
-from src.PyTorch_YOLOv3.models import *
-from src.PyTorch_YOLOv3.utils.logger import *
-from src.PyTorch_YOLOv3.utils.utils import *
-from src.PyTorch_YOLOv3.utils.datasets import *
-from src.PyTorch_YOLOv3.utils.parse_config import *
-from src.PyTorch_YOLOv3.test import evaluate
+import sys
+if sys.version[0:3] == "2.7":
+    from PyTorch_YOLOv3.models import *
+    from PyTorch_YOLOv3.utils.logger import *
+    from PyTorch_YOLOv3.utils.utils import *
+    from PyTorch_YOLOv3.utils.datasets import *
+    from PyTorch_YOLOv3.utils.parse_config import *
+    from PyTorch_YOLOv3.test import evaluate
+else:
+    from src.PyTorch_YOLOv3.models import *
+    from src.PyTorch_YOLOv3.utils.logger import *
+    from src.PyTorch_YOLOv3.utils.utils import *
+    from src.PyTorch_YOLOv3.utils.datasets import *
+    from src.PyTorch_YOLOv3.utils.parse_config import *
+    from src.PyTorch_YOLOv3.test import evaluate
 
 from terminaltables import AsciiTable
 
@@ -69,7 +81,7 @@ def set_training_args(): # Argparser
     return args 
 
 def set_args():
-    args = types.SimpleNamespace()
+    args = cf.SimpleNamespace()
     configs = read_all_args("config/config.yaml")
     
     # 1. Path to model definition file
@@ -182,7 +194,7 @@ if __name__ == "__main__":
 
             log_str = "\n---- [Epoch %d/%d, Batch %d/%d] ----\n" % (epoch, args.epochs, batch_i, len(dataloader))
 
-            metric_table = [["Metrics", *[f"YOLO Layer {i}" for i in range(len(model.yolo_layers))]]]
+            metric_table = [["Metrics"] + [f"YOLO Layer {i}" for i in range(len(model.yolo_layers))]]
 
             # Log metrics at each YOLO layer
             for i, metric in enumerate(metrics):
@@ -190,7 +202,7 @@ if __name__ == "__main__":
                 formats["grid_size"] = "%2d"
                 formats["cls_acc"] = "%.2f%%"
                 row_metrics = [formats[metric] % yolo.metrics.get(metric, 0) for yolo in model.yolo_layers]
-                metric_table += [[metric, *row_metrics]]
+                metric_table += [[metric] + row_metrics]
 
                 # Tensorboard logging
                 tensorboard_log = []

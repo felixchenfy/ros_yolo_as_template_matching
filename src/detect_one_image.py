@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 if 1: # Set path
     import sys, os
     ROOT = os.path.dirname(os.path.abspath(__file__))+"/../" # root of the project

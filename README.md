@@ -2,7 +2,10 @@
 
 # 1. Introduction
 **Abstract:**  
+
 Run 3 simple scripts to synthesize images (by putting your template images onto backgrounds), train yolo, and achieve template matching.
+
+Compatible for both **Python3** and **Python2** !!!
 
 ![](doc/demo_of_image_aug.gif)
 

@@ -1,3 +1,4 @@
+# -*- coding: future_fstrings -*-
 ''' Datasets for image augmentation '''
 
 if 1: # Set path

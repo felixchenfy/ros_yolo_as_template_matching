@@ -15,17 +15,18 @@ python main_setup.py                 \
 # data_source="webcam"
 # image_data_path="none"
 
-# data_source="folder"
-# image_data_path="data/custom1_eval/"
+data_source="folder"
+image_data_path="data/custom1_eval/"
+image_data_path="data/custom1_generated/valid_images/"
 
-data_source="video"
-image_data_path="data/custom1_eval/video.avi"
+# data_source="video"
+# image_data_path="data/custom1_eval/video.avi"
 
 # -- 4. Start detecting
 
 python src/detect_images.py \
     --weights_path "weights/yolo_trained.pth" \
-    --conf_thres 0.9 \
+    --conf_thres 0.99 \
     --nms_thres 0.3 \
     --batch_size 1 \
     --data_source $data_source \
