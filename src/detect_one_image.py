@@ -107,6 +107,8 @@ if __name__ == "__main__":
     img_disp = detector.plot(img, detections)
     
     # Save result
-    os.makedirs("output", exist_ok=True)
-    cv2.imwrite("output/" + os.path.basename(args.image_filename), img=img_disp)
+    OUTPUT_FOLDER = "output/"
+    if not os.path.exists(OUTPUT_FOLDER):
+        os.makedirs(OUTPUT_FOLDER)
+    cv2.imwrite(OUTPUT_FOLDER + os.path.basename(args.image_filename), img=img_disp)
     

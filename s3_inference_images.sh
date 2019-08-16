@@ -24,8 +24,9 @@ image_data_path="data/custom1_eval/video.avi"
 
 # -- 4. Start detecting
 
+WEIGHTS_PATH="weights/yolo_trained.pth"
 python src/detect_images.py \
-    --weights_path "weights/yolo_trained.pth" \
+    --weights_path $WEIGHTS_PATH \
     --conf_thres 0.99 \
     --nms_thres 0.3 \
     --batch_size 1 \

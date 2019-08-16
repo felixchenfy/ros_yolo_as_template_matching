@@ -5,5 +5,7 @@ $ cd weights/
 $ wget -c https://pjreddie.com/media/files/darknet53.conv.74
 
 # 2. My finetuning result
-Please download from here and unzip it into "weights/":  
-https://drive.google.com/file/d/1qo3lPh_H8nTJ0epgJN0Eu8cRgsPq516f/view?usp=sharing
+Please download from here and put it into "weights/":    
+https://drive.google.com/file/d/1rGc64ks2L7OGXQceIh7GXWThglf81fTW/view?usp=sharing
+
+

@@ -3,14 +3,14 @@
 # 1. Introduction
 **Abstract:**  
 
-Run 3 simple scripts to synthesize images (by putting your template images onto backgrounds), train yolo, and achieve template matching.
+Run 3 simple scripts to synthesize images (by putting your template images onto backgrounds), train yolo, and achieve object detection (Or say `template matching`, because we are only using a few template images for training).
 
-Compatible for both **Python3** and **Python2** !!!
+Compatible for both `Python3` and `Python2`!!!
 
 ![](doc/demo_of_image_aug.gif)
 
-**Features:**  
-1. Detect objects whose appearance doesn't change much.
+**Features of this project:**  
+1. Can be used for detecting objects whose appearance doesn't change much.
 2. Save time from the boring labeling of training data. All you need is several *template images*, their *masks*, and some *background images*.   
 3. Synthesize training images by putting the templates onto different backgrounds.
 4. All setups for Yolo are automatically done.
@@ -19,13 +19,13 @@ Compatible for both **Python3** and **Python2** !!!
 
 
 **Reference**:  
-The core code of Yolo is copied from [this repo](https://github.com/eriklindernoren/PyTorch-YOLOv3), and is stored in [src/PyTorch_YOLOv3](src/PyTorch_YOLOv3). I modified its frontend code to meet my need.
+The core code of Yolo is copied from [this repo](https://github.com/eriklindernoren/PyTorch-YOLOv3), and is stored in [src/PyTorch_YOLOv3](src/PyTorch_YOLOv3). I modified some of its code to meet my need.
 
 **Demo:**  
 The raw training data for this demo are:    
-(1) 4 template images.  
-(2) 25 background images downloaded directly from google.  
-The parameters are set in [config/config.yaml](config/config.yaml). The details will be illustrated below.
+(1) 4 template images.   
+(2) 25 background images downloaded directly from google.   
+The parameters are set in [config/config.yaml](config/config.yaml). The details will be illustrated below.  
 
 <p align = "center">
   <img src = "doc/demo_1.gif" height = "240px">
@@ -44,8 +44,7 @@ The parameters are set in [config/config.yaml](config/config.yaml). The details 
 ## 2.1 All commands ready to run
 
 I've prepared the examplar images, settings and codes.  
-You can directly run either one of the following commands:
-
+You can directly run either one of the following commands:  
 ```
 source s1_main_setup.sh             # synthesize images and set up yolo files
 source s3_inference_images.sh       # detecting objects from webcam, folder, or video.
@@ -57,6 +56,7 @@ you can run:
 ```
 source s2_train.sh                  # train yolo
 ```
+The trained models will be saved to: `checkpoints/TIME_OF_TRAINING/`
 
 For more details, please read the following instructions.
 
@@ -193,7 +193,3 @@ https://github.com/eriklindernoren/PyTorch-YOLOv3
 
 * ImportError: bad magic number in 'config': b'\x03\xf3\r\n'  
     $ find . -name \*.pyc -delete 
-* Error in this sentence: "noobj_mask[b[i], anchor_ious > ignore_thres, gj[i], gi[i]] = 0"  
-    I met this bug once. I guess it's because the bounding box goes out of the image border.  
-    I solved it by deleting the data and augment again: "rm data/custom1_generated/".  
-    I can't reproduce this bug again, and I haven't solve the bug in the code.   
