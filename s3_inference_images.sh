@@ -17,7 +17,7 @@ python main_setup.py                 \
 
 # data_source="folder"
 # image_data_path="data/custom1_eval/"
-# image_data_path="data/custom1_generated/valid_images/"
+# # image_data_path="data/custom1_generated/valid_images/"
 
 data_source="video"
 image_data_path="data/custom1_eval/video.avi"

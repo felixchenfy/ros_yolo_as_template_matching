@@ -25,7 +25,7 @@ The core code of Yolo is copied from [this repo](https://github.com/eriklinderno
 The raw training data for this demo are:    
 (1) 4 template images.   
 (2) 25 background images downloaded directly from google.   
-The parameters are set in [config/config.yaml](config/config.yaml). The details will be illustrated below.  
+The parameters are set in [config/config.yaml](config/config.yaml). The only difference is that `"num_new_images"` is set as `3000`. Then the model was trained for `500` epochs.
 
 <p align = "center">
   <img src = "doc/demo_1.gif" height = "240px">
@@ -56,7 +56,7 @@ you can run:
 ```
 source s2_train.sh                  # train yolo
 ```
-The trained models will be saved to: `checkpoints/TIME_OF_TRAINING/`
+The trained models will be saved to: `checkpoints/$TIME_OF_TRAINING/`
 
 For more details, please read the following instructions.
 
