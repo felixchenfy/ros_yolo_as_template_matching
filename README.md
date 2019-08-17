@@ -52,21 +52,19 @@ source s4_inference_one_image.sh    # detecting objects from an image
 ```
 
 After synthesizing images and setting yolo by running "source s1_main_setup.sh",  
-you can run:
+You can do the training:  
 ```
 source s2_train.sh                  # train yolo
 ```
 The trained models will be saved to: `checkpoints/$TIME_OF_TRAINING/`
 
-For more details, please read the following instructions.
-
 ## 2.2 Prepare data
 
 ### 2.2.1 Config
-In [config/config.yaml](config/config.yaml), set the "data_name" and "data_labels" to yours.
+In [config/config.yaml](config/config.yaml), set the "data_name" and "labels" to yours.
 ```
 data_name: "custom1" # Your data folder will be "data/custom1/"
-data_labels: ["bottle", "meter"] # class names of the target objects
+labels: ["bottle", "meter"] # class names of the target objects
 ```
 
 Set the "template_aug_effects" to meet your need.  
@@ -166,25 +164,18 @@ The weights are saved to the [checkpoints/](checkpoints) folder.
 For detecting from (1) webcam, (2) folder, or (3) video,  
 please see [s3_inference_images.sh](s3_inference_images.sh).
 
-Select one of the "data_source" and "image_data_path", and then run:  
+Select one of the "src_data_type" and "image_data_path", and then run:  
 > $ source s3_inference_images.sh  
 
 The result is saved to [output/](output/) folder.
 
-A snippet of code is shown below: 
-``` 
-python src/detect_images.py \
-    --weights_path "weights/yolo_trained.pth" \
-    --conf_thres 0.9 \
-    --nms_thres 0.3 \
-    --batch_size 1 \
-    --data_source $data_source \
-    --image_data_path $image_data_path
-```
 
 ### 2.5.2 Detecting one image
 For detecting from an image, please modify the **image_filename** in [s4_inference_one_image.sh](s4_inference_one_image.sh), and then run:  
 > $ source s4_inference_one_image.sh  
+
+The result is saved to [output/](output/) folder.
+
 
 # 3. Reference
 https://github.com/eriklindernoren/PyTorch-YOLOv3

@@ -3,16 +3,13 @@ from __future__ import division
 
 ''' Provide a class to write yolo configs to file '''
 
-def test_yolo_config():
-    print("Testing: yolo_config.py")
-    filename = "tmp.cfg"
-    yolo_config = YoloConfig(NUM_CLASSES=2)
-    yolo_config.write_to_file(filename)
 
 class YoloConfig(object):
-    def __init__(self, NUM_CLASSES):
-        self.str_yolo_config = set_yolo_config(NUM_CLASSES)
-    
+    def __init__(self, num_classes, num_layers):
+        if num_layers not in [1, 2, 3]:
+            raise ValueError("Yolo layer number should be 1 or 2 or 3")
+        self.str_yolo_config = set_yolo_config(num_classes, num_layers)
+
     def get(self):
         return self.str_yolo_config
 
@@ -22,11 +19,11 @@ class YoloConfig(object):
         print("Write yolo config to: ", filename)
 
 
-def set_yolo_config(NUM_CLASSES):
+def set_yolo_config(num_classes, num_layers):
 
-    CERTAIN_FILTERS = (NUM_CLASSES + 5) * 3
-    
-    str_yolo_config = f'''[net]
+    num_filters = (num_classes + 5) * 3
+
+    yolo_basic = f'''[net]
 # Testing
 #batch=1
 #subdivisions=1
@@ -628,14 +625,16 @@ activation=leaky
 size=1
 stride=1
 pad=1
-filters={CERTAIN_FILTERS}
+filters={num_filters}
 activation=linear
 
 
-[yolo]
+'''
+
+    yolo_layer1 = f'''[yolo]
 mask = 6,7,8
 anchors = 10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326
-classes={NUM_CLASSES}
+classes={num_classes}
 num=9
 jitter=.3
 ignore_thresh = .7
@@ -714,14 +713,16 @@ activation=leaky
 size=1
 stride=1
 pad=1
-filters={CERTAIN_FILTERS}
+filters={num_filters}
 activation=linear
 
 
-[yolo]
+'''
+
+    yolo_layer2 = f'''[yolo]
 mask = 3,4,5
 anchors = 10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326
-classes={NUM_CLASSES}
+classes={num_classes}
 num=9
 jitter=.3
 ignore_thresh = .7
@@ -801,21 +802,35 @@ activation=leaky
 size=1
 stride=1
 pad=1
-filters={CERTAIN_FILTERS}
+filters={num_filters}
 activation=linear
 
 
-[yolo]
+'''
+
+    yolo_layer3 = f'''[yolo]
 mask = 0,1,2
 anchors = 10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326
-classes={NUM_CLASSES}
+classes={num_classes}
 num=9
 jitter=.3
 ignore_thresh = .7
 truth_thresh = 1
 random=1
 '''
-    return str_yolo_config
+    if num_layers == 1:
+        return yolo_basic + yolo_layer1
+    elif num_layers == 2:
+        return yolo_basic + yolo_layer1 + yolo_layer2
+    elif num_layers == 3:
+        return yolo_basic + yolo_layer1 + yolo_layer2 + yolo_layer3
 
 if __name__ == "__main__":
+
+    def test_yolo_config():
+        print("Testing: yolo_config.py")
+        filename = "tmp.cfg"
+        yolo_config = YoloConfig(num_classes=2)
+        yolo_config.write_to_file(filename)
+
     test_yolo_config()

@@ -1,34 +1,27 @@
 #!/bin/bash
 
-# -- 1. Move trained weight file to weights/yolo_trained.ckpt
-mv checkpoints/yolov3_ckpt_100.pth weights/yolo_trained.pth 2>/dev/null || :
-
-# -- 2. Setup yolo config files
+# -- 0. Refresh yolo config files
 python main_setup.py                 \
     --verify_mask           False    \
     --augment_imgs          False    \
     --setup_train_test_txt  False    \
     --setup_yolo            True   
 
-# -- 3. Select one of the 3 data sources by commenting out the other two
+# -- 1. Select one of the 3 data sources by commenting out the other two
 
-# data_source="webcam"
+# src_data_type="webcam"
 # image_data_path="none"
 
-# data_source="folder"
-# image_data_path="data/custom1_eval/"
-# # image_data_path="data/custom1_generated/valid_images/"
+src_data_type="folder"
+image_data_path="data/custom1_eval/"
+# image_data_path="data/custom1_generated/valid_images/"
 
-data_source="video"
-image_data_path="data/custom1_eval/video.avi"
+# src_data_type="video"
+# image_data_path="data/custom1_eval/video.avi"
 
-# -- 4. Start detecting
-
-WEIGHTS_PATH="weights/yolo_trained.pth"
+# -- 2. Detect
 python src/detect_images.py \
-    --weights_path $WEIGHTS_PATH \
-    --conf_thres 0.99 \
-    --nms_thres 0.3 \
-    --batch_size 1 \
-    --data_source $data_source \
+    --config_path "config/config.yaml" \
+    --weights_path "weights/yolo_trained.pth" \
+    --src_data_type $src_data_type \
     --image_data_path $image_data_path

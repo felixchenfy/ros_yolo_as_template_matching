@@ -43,24 +43,6 @@ from torchvision import transforms
 from torch.autograd import Variable
 import torch.optim as optim
 
-# def set_training_args(): # Manually
-#     args = types.SimpleNamespace()
-
-#     args.learning_rate = 1e-4
-#     args.epochs = 100 # number of training epochs
-#     args.checkpoint_interval =  5 # interval between saving model weights
-#     args.evaluation_interval =  5 # interval evaluations on validation set
-    
-#     args.pretrained_weights = "weights/darknet53.conv.74" # if specified starts from checkpoint model
-#     args.batch_size = 2 # size of each image batch
-#     args.gradient_accumulations = 2 # number of gradient accums before step
-#     args.n_cpu = 4 # number of cpu threads to use during batch generation
-    
-#     args.img_size = 416 # size of each image dimension
-#     args.compute_map =  False # if True, computes mAP every tenth batch
-#     args.multiscale_training = True # allow for multi-scale training
-#     return args 
-
 def set_training_args(): # Argparser
         
     parser = argparse.ArgumentParser()
@@ -84,15 +66,15 @@ def set_training_args(): # Argparser
 
 def set_args():
     args = cf.SimpleNamespace()
-    configs = read_all_args("config/config.yaml")
+    configs = read_all_args(ROOT + "config/config.yaml")
     
     # 1. Path to model definition file
     # e.g.: "data/custom1_generated/yolo.cfg" 
-    args.model_def = configs.f_yolo_config 
+    args.f_yolo_config = configs.f_yolo_config 
     
     # 2. Path to data config file
     # e.g.: "data/custom1_generated/yolo.data"
-    args.data_config = configs.f_yolo_data 
+    args.f_yolo_data = configs.f_yolo_data 
     
     # 3. Other training settings
     training_args = set_training_args()
@@ -125,13 +107,13 @@ if __name__ == "__main__":
     IF_PRINT_LOG_STR = True
     
     # Get data configuration
-    data_config = parse_data_config(args.data_config)
-    train_path = data_config["train"]
-    valid_path = data_config["valid"]
-    class_names = load_classes(data_config["names"])
+    f_yolo_data = parse_f_yolo_data(args.f_yolo_data)
+    train_path = f_yolo_data["train"]
+    valid_path = f_yolo_data["valid"]
+    class_names = load_classes(f_yolo_data["names"])
 
     # Initiate model
-    model = Darknet(args.model_def).to(device)
+    model = Darknet(args.f_yolo_config).to(device)
     model.apply(weights_init_normal)
 
     # If specified we start from checkpoint

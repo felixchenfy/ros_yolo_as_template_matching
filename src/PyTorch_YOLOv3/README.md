@@ -48,7 +48,7 @@ Uses pretrained weights to make predictions on images. Below table displays the 
 ```
 $ train.py [-h] [--epochs EPOCHS] [--batch_size BATCH_SIZE]
                 [--gradient_accumulations GRADIENT_ACCUMULATIONS]
-                [--model_def MODEL_DEF] [--data_config DATA_CONFIG]
+                [--f_yolo_config MODEL_DEF] [--f_yolo_data DATA_CONFIG]
                 [--pretrained_weights PRETRAINED_WEIGHTS] [--n_cpu N_CPU]
                 [--img_size IMG_SIZE]
                 [--checkpoint_interval CHECKPOINT_INTERVAL]
@@ -60,7 +60,7 @@ $ train.py [-h] [--epochs EPOCHS] [--batch_size BATCH_SIZE]
 #### Example (COCO)
 To train on COCO using a Darknet-53 backend pretrained on ImageNet run: 
 ```
-$ python3 train.py --data_config config/coco.data  --pretrained_weights weights/darknet53.conv.74
+$ python3 train.py --f_yolo_data config/coco.data  --pretrained_weights weights/darknet53.conv.74
 ```
 
 #### Training log
@@ -124,7 +124,7 @@ In `data/custom/train.txt` and `data/custom/valid.txt`, add paths to images that
 To train on the custom dataset run:
 
 ```
-$ python3 train.py --model_def config/yolov3-custom.cfg --data_config config/custom.data
+$ python3 train.py --f_yolo_config config/yolov3-custom.cfg --f_yolo_data config/custom.data
 ```
 
 Add `--pretrained_weights weights/darknet53.conv.74` to train using a backend pretrained on ImageNet.

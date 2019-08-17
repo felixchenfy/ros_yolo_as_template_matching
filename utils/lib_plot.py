@@ -36,9 +36,9 @@ def show(imgs, figsize=(6, 10), layout=None):
         plt.imshow(imgs[i])
     plt.show()
 
-def cv2_imshow(img):
+def cv2_imshow(img, time_ms=0):
     cv2.imshow("image", img)
-    cv2.waitKey()
+    cv2.waitKey(time_ms)
     cv2.destroyAllWindows()
 
 def draw_bbox(img, bbox, color=(0,255,0), thickness=2):

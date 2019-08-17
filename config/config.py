@@ -1,5 +1,3 @@
-from __future__ import division
-
 ''' Usage:
 In the main script, import "read_all_args" function
 In this script, modify parameters only "set_fixed_arguments" function
@@ -32,17 +30,16 @@ def set_fixed_arguments(args):
 # --------------------------------------------------------------------
 
 
-import utils.lib_common_funcs as cf
-
 if 1: # Set path
     import sys, os
     ROOT = os.path.dirname(os.path.abspath(__file__))+"/../" # root of the project
     sys.path.append(ROOT)
+import utils.lib_common_funcs as cf
 
 def read_all_args(config_file="config/config.yaml"):
     
     # Read args from yaml file
-    args_dict = cf.load_yaml(ROOT + config_file)
+    args_dict = cf.load_yaml(config_file)
     args = cf.dict2class(args_dict)
     
     # Some fixed arguments that doesn't need change

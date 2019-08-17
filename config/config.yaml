@@ -1,6 +1,7 @@
 
 data_name: "custom1" # Your data folder will be "data/data_name/"
-data_labels: ["bottle", "meter"] # class names of the target objects
+labels: ["bottle", "meter"] # class names of the target objects
+yolo_layer_number: 3 # 1 or 2 or 3. By default it's 3.
 
 img_aug_nums:
 # Format: [l, r] means uniformly select a value Implicitly between [l, r]
@@ -10,6 +11,16 @@ img_aug_nums:
 yolo:
   "ratio_train": 0.8 # percentage of images for training (in "train.txt"); The rest goes into "valid.txt".
 
+yolo_inference:
+  "conf_thres": 0.95 # object confidence threshold
+  "nms_thres": 0.5  # iou thresshold for non-maximum suppression
+  "batch_size": 4 # size of the batches   when reading images. Used in src/detect_images.py
+  "n_cpu": 4      # number of cpus to use when reading images. Used in src/detect_images.py
+  "img_size": 416 # size of each image dimension. 
+                  # WARNING: Currently the image must be a square. 
+                  # What's worse, the setting for img_size is in a chaos (It's set in multiple places). 
+                  # If you want to change image size, you need to search for all (e.g. 416) and replace them all. 
+                  
 template_aug_effects: 
   "rela_size" :  [0.03, 0.15] # template's relative size wrt background image
   "rescale" : [1.0, 1.8] # rescale template

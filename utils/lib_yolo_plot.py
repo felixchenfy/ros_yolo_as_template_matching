@@ -3,10 +3,10 @@ from __future__ import division
 
 ''' API for plotting:
 
--- class Yolo_Detection_Plotter_by_very_slow_plt:
+-- class Yolo_Detection_Plotter_PLT:
     Use plt to plot result. Very slow. 0.35s per image.
 
--- class Yolo_Detection_Plotter_by_cv2:
+-- class Yolo_Detection_Plotter_CV2:
     Use cv2 to plot result. Fast. 0.02s
     
 '''
@@ -64,15 +64,15 @@ def put_text_with_background_color(
     cv2.putText(img, text, (x, y), fontFace=font, fontScale=font_scale, color=(0, 0, 0), thickness=thickness)
 
 
-# Draw onto image the bounding boxes and texts of the detection results 
-class Yolo_Detection_Plotter_by_very_slow_plt(object):
-    def __init__(self, IF_SHOW):
+# Draw onto image the bounding boxes and texts of the detection results (Very Very Slow!)
+class Yolo_Detection_Plotter_PLT(object):
+    def __init__(self, if_show):
         self.cmap = plt.get_cmap("tab20b")
         self.colors = [self.cmap(i) for i in np.linspace(0, 1, 20)]
-        self.IF_SHOW = IF_SHOW 
+        self.if_show = if_show 
         
         # Init figure
-        if IF_SHOW: plt.ion()
+        if if_show: plt.ion()
         fig = plt.figure(figsize=(12, 8))
         self.ax = fig.add_subplot(111) # or: ax = plt.gca()
     
@@ -83,7 +83,7 @@ class Yolo_Detection_Plotter_by_very_slow_plt(object):
         plt.cla()
         img = img/255.0 # rgb, uint8 --> rgb, float
         self._plot(img, detections, classes)
-        if self.IF_SHOW: plt.pause(0.001)
+        if self.if_show: plt.pause(0.001)
     
     def close(self):
         plt.close()
@@ -137,8 +137,8 @@ class Yolo_Detection_Plotter_by_very_slow_plt(object):
 # ------------------------------------------------------------------------------
 
 # Draw onto image the bounding boxes and texts of the detection results 
-class Yolo_Detection_Plotter_by_cv2(object):
-    def __init__(self, IF_SHOW=True, 
+class Yolo_Detection_Plotter_CV2(object):
+    def __init__(self, classes, if_show=True, 
                  cv2_waitKey_time=1, # (ms) 
                  window_name="Yolo detection results",
                  resize_scale=1, # resize image larger
@@ -149,13 +149,14 @@ class Yolo_Detection_Plotter_by_cv2(object):
         self.window_name = window_name
         self.cv2_waitKey_time = cv2_waitKey_time
         self.resize_scale = resize_scale
-        self.IF_SHOW = IF_SHOW 
+        self.if_show = if_show 
         self.img_disp = None # The image wait to be plot: float, 0~1, RGB. 
-        
+        self.classes = classes
+
     def savefig(self, filename):
         cv2.imwrite(filename, self.img_disp)
 
-    def plot(self, img, detections, classes, img_channels='rgb', if_plot_center=True, if_print=True):
+    def plot(self, img, detections, img_channels='rgb', if_plot_center=True, if_print=True):
         '''
         Input:
             img: 3 channels, rgb, uint8
@@ -168,13 +169,13 @@ class Yolo_Detection_Plotter_by_cv2(object):
         else:
             self.img_disp = img.copy()
             
-        self._plot_onto_image(self.img_disp, detections, classes, if_plot_center, if_print)
+        self._plot_onto_image(self.img_disp, detections, if_plot_center, if_print)
         
         if self.resize_scale != 1:
             self.img_disp = cv2.resize( # make the drawing larger
                 self.img_disp, dsize=(0, 0), fx=self.resize_scale, fy=self.resize_scale) 
         
-        if self.IF_SHOW: 
+        if self.if_show: 
             cv2.imshow(self.window_name, self.img_disp)
             cv2.waitKey(self.cv2_waitKey_time)
         return self.img_disp
@@ -182,9 +183,12 @@ class Yolo_Detection_Plotter_by_cv2(object):
     def close(self):
         cv2.destroyAllWindows()
         
-    def _plot_onto_image(self, img, detections, classes, if_plot_center, if_print):
+    def _plot_onto_image(self, img, detections, if_plot_center, if_print):
         colors = self.colors
-
+        classes = self.classes
+        if isinstance(detections, list):
+            detections = np.array(detections)
+            
         # Draw bounding boxes and labels of detections
         if (detections is not None) and (len(detections) > 0):
             # unique_labels = detections[:, -1].cpu().unique() # tensor version

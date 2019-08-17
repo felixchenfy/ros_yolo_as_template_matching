@@ -45,7 +45,7 @@ def write_object_labels_to_file(args):
         labels = {get_label(fn) for fn in fnames} # /folder/bottle_1.jpg --> bottle
         labels = sorted(list(labels))
     else: # from configurations
-        labels = args.data_labels
+        labels = args.labels
     print(f"Object labels: {labels}")
         
     # Write labels to txt for yolo training
@@ -85,9 +85,6 @@ def create_masked_template_to_verify(args):
 
 def augment_images(args):
     
-    # Settings
-    pass 
-
     # Check
     cf.create_folder(args.f_yolo_images)
     cf.create_folder(args.f_yolo_labels)
@@ -204,7 +201,7 @@ def setup_train_test_txt(args):
 def setup_yolo_files(args):
     # Write yolo.cfg, which is yolo's network configurations file
     n_labels = len(args.labels)
-    yolo_config = YoloConfig(NUM_CLASSES=n_labels)
+    yolo_config = YoloConfig(n_labels, args.yolo_layer_number)
     yolo_config.write_to_file(args.f_yolo_config)
     
     # Write yolo.data, which specifies the data path to train yolo
@@ -230,7 +227,7 @@ def parse_args():
     
     # Command line args
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config_file", type=str, default="config/config.yaml", 
+    parser.add_argument("--config_file", type=str, default=ROOT + "config/config.yaml", 
                         help="path to config file")
     parser.add_argument("--verify_mask", type=MyBool, default=False, 
                         help="Whether write masked templates to file for user to verify if mask is correct or not")
@@ -257,7 +254,7 @@ def main(args):
     
     ALL_ON = False # Turn on all functions. For debug only.
     
-    if True: # Write object labels, for yolo training. This is necessary, and fast.
+    if True: # Write object labels for yolo training. This is necessary.
         labels = write_object_labels_to_file(args) 
         args.labels = labels
         
@@ -266,7 +263,6 @@ def main(args):
     
     if ALL_ON or args.augment_imgs: # This takes time, so I use args to specify whether do this or not
         augment_images(args)
-    
     
     if ALL_ON or args.setup_train_test_txt:
         setup_train_test_txt(args)
