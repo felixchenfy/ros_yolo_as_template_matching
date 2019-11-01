@@ -61,7 +61,9 @@ def put_text_with_background_color(
     x, y = text_pos
     box_coords = ((x, y), (x + text_width - 2, y - text_height - 2))
     cv2.rectangle(img, box_coords[0], box_coords[1], bg_color, cv2.FILLED)
-    cv2.putText(img, text, (x, y), fontFace=font, fontScale=font_scale, color=(0, 0, 0), thickness=thickness)
+    cv2.putText(img, text, (x, y), 
+                fontFace=cv2.FONT_HERSHEY_PLAIN, 
+                fontScale=1.0, color=(0, 0, 0), thickness=thickness)
 
 
 # Draw onto image the bounding boxes and texts of the detection results (Very Very Slow!)

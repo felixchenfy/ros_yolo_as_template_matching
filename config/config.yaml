@@ -4,7 +4,7 @@ labels: ["bottle", "meter"] # class names of the target objects
 yolo_layer_number: 3 # 1 or 2 or 3. By default it's 3.
 
 img_aug_nums:
-# Format: [l, r] means uniformly select a value Implicitly between [l, r]
+# Format: [l, r] means uniformly select a value between [l, r] implicitly.
   "num_new_images": 100 # How many training images with labels we want to generate 
   "objects_per_image": [0, 6] # How many objects per image
 
@@ -30,13 +30,12 @@ template_aug_effects:
   "translate_y" : [0, 1] #    (x=0, y=0) is left-up, and (x=1, y=1) is bottom-right corner
   "brightness_offset" : [-30, 30] # inc/decrease the brightness of template image
 
-# ------------- Usually, the following settings doens't need change.
-# ------------- If does, please set them directly in the .py script
+# -- Others
 
-#background_aug_effects: 
-#  which_script: "utils/lib_augment_image.py"
-#  which_function": "def _set_args_for_background_augment"
+# For the data augumentation of background images, please directly modifty: 
+#  script: "utils/lib_augment_image.py"
+#  function": "def _set_args_for_background_augment"
 
-#important_file_paths:
-#  which_script: "config/config.py"
-#  which_function: "def set_fixed_arguments"
+# For the configurations of file paths, please directly modify:
+#  script: "config/config.py"
+#  function: "def set_fixed_arguments"
