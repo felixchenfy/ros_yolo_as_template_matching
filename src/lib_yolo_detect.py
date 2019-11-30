@@ -12,7 +12,6 @@ from src.PyTorch_YOLOv3.utils.utils import non_max_suppression, load_classes
 from src.PyTorch_YOLOv3.utils.datasets import ImgfolderDataset
     
 from utils.lib_yolo_datasets import ImgfolderDataset, UsbcamDataset, VideofileDataset
-from utils.lib_common_funcs import Timer
 from utils.lib_yolo_plot import Yolo_Detection_Plotter_CV2
 import utils.lib_common_funcs as cf
 from config.config import read_all_args
@@ -257,7 +256,7 @@ class ObjDetector(object):
         self.classes = load_classes(args.f_yolo_classes)  # Extracts class labels from file
         self.plotter = Yolo_Detection_Plotter_CV2(classes=self.classes, if_show=False)
         self.args, self.args_inference = args, args_inference
-        
+    
     def detect_cv2_img(self, cv2_img, is_one_obj_per_class=False):
         '''
         Argument:

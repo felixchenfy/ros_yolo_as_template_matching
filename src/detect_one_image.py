@@ -7,19 +7,11 @@ Detect one image by YOLOv3.
 
 import os
 import sys
-import time
 import datetime
 import argparse
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image
-import types
-
-import torch
-from torch.utils.data import DataLoader
-from torchvision import datasets
-from torch.autograd import Variable
 
 if 1:  # Set path
     import sys
@@ -33,7 +25,6 @@ if 1:  # Set path
 
     import src.lib_yolo_detect as lib_yolo_detect
     import utils.lib_plot as lib_plot
-    from utils.lib_common_funcs import Timer, SimpleNamespace
     from utils.lib_yolo_plot import Yolo_Detection_Plotter_CV2, Yolo_Detection_Plotter_PLT
 
 # ===========================================================================

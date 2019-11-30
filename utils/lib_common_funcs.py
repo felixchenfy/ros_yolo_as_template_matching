@@ -142,10 +142,10 @@ class Timer(object):
     def __init__(self):
         self.t0 = time.time()
 
-    def report_time(self, action):
+    def report_time(self, msg):
         t = time.time() - self.t0
-        t = "{:.2f}".format(t)
-        print(f"'{action}' takes {t} seconds")
+        t = "{:.3f}".format(t)
+        print(f"'{msg}' takes {t} seconds")
 
     def reset(self):
         self.t0 = time.time()

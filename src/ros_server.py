@@ -29,17 +29,9 @@ from ros_yolo_as_template_matching.msg import DetectionResults
 import cv2
 import numpy as np
 import argparse
-import yaml
 import os
 import sys
-import time
-import datetime
 import argparse
-import cv2
-import numpy as np
-import matplotlib.pyplot as plt
-from PIL import Image
-import types
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -52,7 +44,6 @@ if True:
 
     # Commons
     from utils.lib_common_funcs import Timer, SimpleNamespace
-    import utils.lib_plot as lib_plot
 
     # ROS
     from utils.lib_ros_rgbd_pub_and_sub import ColorImageSubscriber, ColorImagePublisher
@@ -74,83 +65,97 @@ def set_inputs():
                         default=ROOT+"config/config.yaml",
                         help="path to config file")
     parser.add_argument("-i", "--src_topic_img", type=str,
+                        required=True,
                         help="ROS topic: src image for object detection.")
     parser.add_argument("-o", "--dst_topic_img", type=str,
+                        required=True,
                         help="ROS topic: dst image that shows the results.")
     parser.add_argument("-t", "--dst_topic_res", type=str,
+                        required=True,
                         help="ROS topic: dst results of each object's label, confidence and bbox.")
     args = parser.parse_args()
     return args
 
 
 class DetectionResultsPublisher(object):
-    def __init__(self, topic_name, queue_size=10):
+    def __init__(self, topic_name, classes, queue_size=10):
         self._pub = rospy.Publisher(
             topic_name, DetectionResults, queue_size=queue_size)
+        self._classes = classes
 
     def publish(self, detections):
         '''
         Arguments:
-            detections {list of PlaneParam}
+            detections {Nx7 arrays}: Info of each obj: Bbox(4), conf, cls_conf, cls_idx.
+                This can be {2d list} or {np.ndarray} or {torch.Tensor}
         '''
-        int32 N                 # Number of detected objects.
+        res = DetectionResults()
+        res.N = len(detections)
+        for x1, y1, x2, y2, conf, cls_conf, cls_idx in detections:
+            label = self.classes[int(cls_idx)]
+            confidence = cls_conf
+            bbox = [x1, y1, x2, y2]
 
-
-string label            # Nx1. Label of each object.
-float32[] confidence    # Nx1. Confidence of each object. Range=[0, 1].
-float32[] bbox          # Nx4. (x0, y0, x1, y1). Range=[0, 1].
-
- res = DetectionResults()
-  res.N = len(plane_params)
-   for pp in plane_params:
-        res.norms.extend(pp.w.tolist())
-        res.center_3d.extend(pp.pts_3d_center.tolist())
-        res.center_2d.extend(pp.pts_2d_center.tolist())
-        res.mask_color.extend(pp.mask_color.tolist())
-    self._pub.publish(res)
-    return
+            res.labels.append(label)
+            res.confidences.append(confidence)
+            res.bboxs.extend(bbox)
+        self._pub.publish(res)
+        return
 
 
 def main(args):
 
+    # -- Init detector
+    rospy.loginfo("Initializing YOLO detector ...")
+    detector = lib_yolo_detect.ObjDetector(args.config_path, args.weights_path)
+    classes = detector.classes
+    rospy.loginfo("Initializing completes.")
+
     # -- Input ROS topic.
     sub_img = ColorImageSubscriber(args.src_topic_img)
+    rospy.loginfo("Subscriber image from: " + args.src_topic_img)
 
     # -- Output ROS topics.
     pub_img = ColorImagePublisher(args.dst_topic_img)
+    rospy.loginfo("Publish result image to: " + args.src_topic_img)
+    pub_res = DetectionResults(args.dst_topic_res, classes)
+    rospy.loginfo("Publish detection results to: " + args.dst_topic_res)
 
-    img = cv2.imread(args.image_filename, cv2.IMREAD_COLOR)
+    # -- Subscribe images and detect.
+    rospy.loginfo("Start waiting for image and doing detection!")
+    while not rospy.is_shutdown():
+        if sub_img.has_image():
 
-    # Init detector
-    detector = lib_yolo_detect.ObjDetector(args.config_path, args.weights_path)
+            # -- Read image from the subscription queue.
+            img = sub_img.get_image()
+            timer = Timer()
 
-    # Detect
-    detections = detector.detect_cv2_img(img)
-    img_disp = detector.draw_bboxes(img, detections)
+            # -- Detect objects.
+            rospy.loginfo("=================================================")
+            rospy.loginfo("Received an image. Start object detection.")
 
-    TEST_DETECT_IMGS = False
-    if TEST_DETECT_IMGS:
-        imgs = [img, img, img]  # duplicate image
-        imgs_detections = detector.detect_cv2_imgs(imgs)
-        img_disps = [detector.draw_bboxes(img, detections)
-                     for detections in imgs_detections]
-        img_disp = np.hstack(img_disps)
+            detections = detector.detect_cv2_img(img)
+            img_disp = detector.draw_bboxes(img, detections)
 
-    # Plot
-    lib_plot.cv2_imshow(img_disp, time_ms=0)
+            # -- Print results.
+            for x1, y1, x2, y2, conf, cls_conf, cls_idx in detections:
+                label = classes[int(cls_idx)]
+                print("  Label = {}; Conf = {}; Bbox = {}".format(
+                    label, cls_conf, (x1, y1, x2, y2)))
+            timer.report_time(msg="Detection")
 
-    # Save result
-    OUTPUT_FOLDER = args.output_folder
-    print("Result images are saved to: " + OUTPUT_FOLDER)
-    if not os.path.exists(OUTPUT_FOLDER):
-        os.makedirs(OUTPUT_FOLDER)
-    cv2.imwrite(OUTPUT_FOLDER +
-                os.path.basename(args.image_filename), img=img_disp)
+            # -- Publish result.
+            pub_img.publish(img_disp)
+            pub_res.publish(detections)
+            rospy.loginfo("Publish results completes.")
+            rospy.loginfo("-------------------------------------------------")
+            rospy.loginfo("")
 
 
 if __name__ == '__main__':
     node_name = "yolo_detection_server"
     rospy.init_node(node_name)
+    rospy.loginfo("ROS node starts: " + node_name)
     args = set_inputs()
     main(args)
     rospy.logwarn("Node `{}` stops.".format(node_name))

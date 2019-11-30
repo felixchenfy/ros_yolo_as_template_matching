@@ -14,7 +14,7 @@ yolo:
 yolo_inference:
   "conf_thres": 0.95 # object confidence threshold
   "nms_thres": 0.5  # iou thresshold for non-maximum suppression
-  "batch_size": 4 # size of the batches   when reading images. Used in src/detect_images.py
+  "batch_size": 1 # size of the batches   when reading images. Used in src/detect_images.py
   "n_cpu": 4      # number of cpus to use when reading images. Used in src/detect_images.py
   "img_size": 416 # size of each image dimension. 
                   # WARNING: Currently the image must be a square. 

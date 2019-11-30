@@ -6,12 +6,9 @@ Detect images by YOLOv3.
 The images can be read from either:
     (1) Web camera.
     (2) A folder of images.
+    (3) A video file.
 '''
 
-from torch.autograd import Variable
-from torchvision import datasets
-from torch.utils.data import DataLoader
-import torch
 import os
 import sys
 import time
@@ -20,7 +17,6 @@ import argparse
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from PIL import Image
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -35,7 +31,6 @@ if 1:  # Set path
 
     import src.lib_yolo_detect as lib_yolo_detect
     import utils.lib_plot as lib_plot
-    from utils.lib_common_funcs import Timer
     from utils.lib_yolo_plot import Yolo_Detection_Plotter_CV2, Yolo_Detection_Plotter_PLT
 
 
@@ -49,11 +44,13 @@ def set_inputs():
                         help="path to weights file")
     parser.add_argument("-t", "--src_data_type",
                         choices=['folder', 'video', 'webcam'],
+                        required=False,
                         type=str,
                         default="webcam",
                         help="read data from a folder, video file, of webcam")
     parser.add_argument("-i", "--image_data_path", type=str,
-                        default="",
+                        required=False,
+                        default="none",
                         help="depend on '--src_data_type', set this as: a folder, or a video file,")
     parser.add_argument("-o", "--output_folder", type=str,
                         required=False,
