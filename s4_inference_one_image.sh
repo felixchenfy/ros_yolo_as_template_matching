@@ -8,7 +8,7 @@ python main_setup.py                 \
     --setup_yolo            True   
 
 # -- 1. Set image filename
-image_filename="data/custom1_eval/00011.png"
+image_filename="test_data00011.png"
 
 # -- 2. Detect
 python src/detect_one_image.py \

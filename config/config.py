@@ -10,7 +10,6 @@ def set_fixed_arguments(args):
     
     args.f_data_src = ROOT + "data/" + args.data_name + "/" # data/custom1/
     args.f_data_dst = ROOT + "data/" + args.data_name + "_generated/" # data/custom1_generated/
-    args.f_data_eval = ROOT + "data/" + args.data_name + "_eval/" # data/custom1_generated/
     
     args.f_template_img = args.f_data_src + "template_img/" # data/custom1/template_img
     args.f_template_mask = args.f_data_src + "template_mask/" # data/custom1/template_mask

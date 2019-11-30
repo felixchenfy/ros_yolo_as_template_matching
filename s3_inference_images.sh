@@ -13,11 +13,11 @@ python main_setup.py                 \
 # image_data_path="none"
 
 src_data_type="folder"
-image_data_path="data/custom1_eval/"
+image_data_path="test_data"
 # image_data_path="data/custom1_generated/valid_images/"
 
 # src_data_type="video"
-# image_data_path="data/custom1_eval/video.avi"
+# image_data_path="test_datavideo.avi"
 
 # -- 2. Detect
 python src/detect_images.py \

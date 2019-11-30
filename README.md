@@ -3,36 +3,36 @@
 # 1. Introduction
 **Abstract:**  
 
-Run 3 simple scripts to synthesize images (by putting your template images onto backgrounds), train yolo, and achieve object detection (Or say `template matching`, because we are only using a few template images for training).
+Run 3 simple scripts to (1) synthesize images (by putting few template images onto backgrounds), (2) train YOLOv3, and (3) achieve object detection.
 
-Compatible for both `Python3` and `Python2`!!!
+It's named `Template Matching` because we are only using a few template images for training).
 
+**Support**:
+- **Language**: Python 2 or 3; ROS or not ROS. 
+- **Data source** for inference: (1) An image; (2) A folder of images; (3) A video file. (4) Webcam. (5) ROS topic. 
+
+**Demo of Data augmentation**:
 ![](doc/demo_of_image_aug.gif)
 
-**Features of this project:**  
-1. Can be used for detecting objects whose appearance doesn't change much.
-2. Save time from the boring labeling of training data. All you need is several *template images*, their *masks*, and some *background images*.   
-3. Synthesize training images by putting the templates onto different backgrounds.
-4. All setups for Yolo are automatically done.
-5. This repo will be very helpful if you have a *robot arm* and a *depth camera* to automatically mask the object for you, like [this](https://github.com/felixchenfy/Mask-Objects-from-RGBD).
-6. Good for robotics-related project involving object detection.
 
 
-**Reference**:  
-The core code of Yolo is copied from [this repo](https://github.com/eriklindernoren/PyTorch-YOLOv3), and is stored in [src/PyTorch_YOLOv3](src/PyTorch_YOLOv3). I modified some of its code to meet my need.
-
-**Demo:**  
-The raw training data for this demo are:    
-(1) 4 template images.   
-(2) 25 background images downloaded directly from google.   
-The parameters are set in [config/config.yaml](config/config.yaml). The only difference is that `"num_new_images"` is set as `3000`. Then the model was trained for `500` epochs.
-
+**Demo of Object detection:**  
 <p align = "center">
   <img src = "doc/demo_1.gif" height = "240px">
   <img src = "doc/demo_2.gif" height = "240px">
 </p>
 
+The demo above was trained from:    
+(1) 4 template images.   
+(2) 25 background images downloaded directly from google. 
+By putting templates onto backgrounds, `3000` synthsized images were created, and traiend for `500` epochs. The illustration is shown below.
+
+**System workflow:**  
 ![](doc/fig1_intro.png)
+
+
+
+**Reference**: The core code of Yolo is copied from [this repo](https://github.com/eriklindernoren/PyTorch-YOLOv3), and is stored in [src/PyTorch_YOLOv3](src/PyTorch_YOLOv3), with slight modifications.
 
 # 2. How to run
 

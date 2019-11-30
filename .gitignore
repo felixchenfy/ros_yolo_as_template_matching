@@ -8,6 +8,10 @@
 
 weights
 checkpoints
+logs
+garbage
+doc
+data
 
 **/.vscode/*
 **/__pycache__/*
