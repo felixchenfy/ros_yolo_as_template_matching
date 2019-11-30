@@ -263,7 +263,7 @@ class ObjDetector(object):
         Argument:
             cv2_img {a clor image read from cv2.imread}
         Return:
-            detections {2d list}: Each element is a  1D list indicating the detected object
+            detections {2d list}: Each element is a 1D list indicating the detected object
                                   [[x1, y1, x2, y2, conf, cls_conf, cls_pred], [...], ...],
                                   where (x1, yi) represents in the original image coordinate
                                   
@@ -290,6 +290,11 @@ class ObjDetector(object):
             self.args_inference, self.model, torch_imgs, is_one_obj_per_class)
         
     def draw_bboxes(self, img, detections):
+        '''
+        Arguments:
+            detections {Nx7 arrays}: Info of each obj: Bbox(4), conf, cls_conf, cls_idx.
+                This can be {2d list} or {np.ndarray} or {torch.Tensor}
+        '''
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img_disp = self.plotter.plot(img, detections, if_print=False)
         return img_disp

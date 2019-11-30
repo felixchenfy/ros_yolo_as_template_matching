@@ -33,12 +33,24 @@ from utils.lib_yolo_plot import Yolo_Detection_Plotter_CV2, Yolo_Detection_Plott
 
 def set_inputs():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--config_path", type=str, default=ROOT + "config/config.yaml", help="path to config file")
-    parser.add_argument("--weights_path", type=str, default="weights/yolov3.weights", help="path to weights file")
-    parser.add_argument("--src_data_type", type=str, choices=['folder', 'video', 'webcam'], 
-                        default="webcam", help="read data from a folder, video file, of webcam")
-    parser.add_argument("--image_data_path", type=str, default="", 
+    parser.add_argument("-c", "--config_path", type=str, 
+                        default=ROOT + "config/config.yaml", 
+                        help="path to config file")
+    parser.add_argument("-w", "--weights_path", type=str, 
+                        default="weights/yolov3.weights", 
+                        help="path to weights file")
+    parser.add_argument("-t", "--src_data_type", 
+                        choices=['folder', 'video', 'webcam'], 
+                        type=str, 
+                        default="webcam", 
+                        help="read data from a folder, video file, of webcam")
+    parser.add_argument("-i", "--image_data_path", type=str, 
+                        default="", 
                         help="depend on '--src_data_type', set this as: a folder, or a video file,")
+    parser.add_argument("-o", "--output_folder", type=str, 
+                        required=False,
+                        default=ROOT + "output/", 
+                        help="Detection result images will be saved here.")
     args = parser.parse_args()
     return args 
 
@@ -51,7 +63,8 @@ if __name__ == "__main__":
     IF_SINGLE_INSTANCE = False # single instance for each class
     
     # Save result data to this folder
-    OUTPUT_FOLDER = "output"
+    OUTPUT_FOLDER = args.output_folder
+    print("Result images are saved to: " + OUTPUT_FOLDER)
     if not os.path.exists(OUTPUT_FOLDER):
         os.makedirs(OUTPUT_FOLDER)
 
@@ -78,12 +91,12 @@ if __name__ == "__main__":
         #                                  bbox = [x1, y1, x2, y2] in the image coordinate
         imgs_detections = detector.detect_torch_imgs(imgs)
         
-        # -- Log progress
+        # -- Print progress.
         if 1:
             current_time = time.time()
             inference_time = datetime.timedelta(seconds=current_time - prev_time)
             prev_time = current_time
-            print("\nBatch %d, Inference Time: %s" % (batch_i, inference_time))
+            print("\nBatch %d: %d images; Inference Time: %s" % (batch_i, len(imgs), inference_time))
         
         # -- Draw "detections" onto each image
         for img_i, (img, path, detections) in enumerate(zip(imgs, imgs_path, imgs_detections)):
@@ -99,5 +112,6 @@ if __name__ == "__main__":
             filename = f"{OUTPUT_FOLDER}/{os.path.basename(path)}"
             cv2.imwrite(filename, img_disp)
         
+    print("Result images are saved to: " + OUTPUT_FOLDER)
     cv2.destroyAllWindows()
         
