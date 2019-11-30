@@ -1,12 +1,6 @@
 # -*- coding: future_fstrings -*-
 from __future__ import division
 
-import cv2 
-import numpy as np 
-
-
-
-# Basics =============================================
 import numpy as np
 import cv2
 import math
@@ -20,16 +14,16 @@ def load_image_to_binary(filename):
     https://sirarsalih.com/2018/04/23/how-to-make-background-transparent-in-gimp/
     https://help.surveyanyplace.com/en/support/solutions/articles/35000041561-how-to-make-a-logo-with-transparent-background-using-gimp-or-photoshop
     '''
-    img = cv2.imread(filename, cv2.IMREAD_UNCHANGED) # read default format
+    img = cv2.imread(filename, cv2.IMREAD_UNCHANGED)  # read default format
     threshold = 127
     # print(f"image shape {img.shape}, filename: {filename}")
-    
-    if len(img.shape) == 2: # gray image
+
+    if len(img.shape) == 2:  # gray image
         mask = img > threshold
-    elif img.shape[2] == 3: # color image
+    elif img.shape[2] == 3:  # color image
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         mask = img > threshold
-    elif img.shape[2] ==4: # image with a transparent channel 
+    elif img.shape[2] == 4:  # image with a transparent channel
         mask = img[:, :, -1] > threshold
     return mask
 
@@ -38,18 +32,19 @@ def add_mask(image, mask):
     ''' In image, set mask region to BLACK or GRAY'''
     BLACK, GRAY = 0, 127
     image = image.copy()
-    idx = np.where(mask==0)
+    idx = np.where(mask == 0)
     image[idx] = GRAY
-    return image 
-        
-def add_color_to_mask_region(img, mask, channel, mask_value = 1):
+    return image
+
+
+def add_color_to_mask_region(img, mask, channel, mask_value=1):
     ''' In image, for the mask region, add color to certain channel '''
     img_disp = img.copy()
     i_sub = img_disp[..., channel]
-    i_sub[np.where(mask==mask_value)] = 255
+    i_sub[np.where(mask == mask_value)] = 255
     return img_disp
 
-    
+
 def getBbox(mask, norm=False):
     ''' Return normalized pos of the white region in mask.
     format: (x, y, w, h), same as Yolo '''
@@ -69,13 +64,14 @@ def getBbox(mask, norm=False):
             return rmin, rmax, cmin, cmax
     except:
         return None, None, None, None
-        
+
 
 def crop_image(img, rmin, rmax, cmin, cmax):
-    if len(img.shape)==2:
+    if len(img.shape) == 2:
         return img[rmin:rmax, cmin:cmax]
     else:
         return img[rmin:rmax, cmin:cmax, :]
+
 
 def get_mask_region(img0, mask0):
     rmin, rmax, cmin, cmax = getBbox(mask0)
@@ -83,8 +79,9 @@ def get_mask_region(img0, mask0):
     mask = crop_image(mask0, rmin, rmax, cmin, cmax)
     return img, mask
 
+
 def cvt_binary2color(mask):
     ''' Convert mask image to 3-channel color image by stacking 3 channels'''
     mask = mask * 255
     color = np.stack((mask, mask, mask), axis=2)
-    return color 
+    return color
