@@ -1,6 +1,9 @@
 # -*- coding: future_fstrings -*-
 from __future__ import division
 
+'''
+Detect one image by YOLOv3. 
+'''
 
 import os
 import sys
@@ -66,7 +69,8 @@ if __name__ == "__main__":
     detector = lib_yolo_detect.ObjDetector(args.config_path, args.weights_path)
 
     # Detect.
-    detections = detector.detect_cv2_img(img) # 2d list. Each list contains info of one object.
+    # 2d list. Each list contains info of one object.
+    detections = detector.detect_cv2_img(img)
 
     img_disp = detector.draw_bboxes(img, detections)
 

@@ -104,18 +104,18 @@ class Yolo_Detection_Plotter_PLT(object):
         if (detections is not None) and (len(detections) > 0):
             # unique_labels = detections[:, -1].cpu().unique() # tensor version
             unique_labels = np.unique(detections[:, -1])  # numpy version
-            n_cls_preds = len(unique_labels)
-            bbox_colors = random.sample(colors, n_cls_preds)
-            for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
+            n_cls_idxs = len(unique_labels)
+            bbox_colors = random.sample(colors, n_cls_idxs)
+            for x1, y1, x2, y2, conf, cls_conf, cls_idx in detections:
 
                 print("\t+ Label: %s, Conf: %.5f" %
-                      (classes[int(cls_pred)], cls_conf.item()))
+                      (classes[int(cls_idx)], cls_conf.item()))
 
                 box_w = x2 - x1
                 box_h = y2 - y1
 
                 color = bbox_colors[int(
-                    np.where(unique_labels == int(cls_pred))[0])]
+                    np.where(unique_labels == int(cls_idx))[0])]
                 # Create a Rectangle patch
                 bbox = patches.Rectangle(
                     (x1, y1), box_w, box_h, linewidth=2, edgecolor=color, facecolor="none")
@@ -125,7 +125,7 @@ class Yolo_Detection_Plotter_PLT(object):
                 plt.text(
                     x1,
                     y1,
-                    s=classes[int(cls_pred)],
+                    s=classes[int(cls_idx)],
                     color="white",
                     verticalalignment="bottom",
                     bbox={"color": color, "pad": 0},
@@ -212,17 +212,17 @@ class Yolo_Detection_Plotter_CV2(object):
         if (detections is not None) and (len(detections) > 0):
             # unique_labels = detections[:, -1].cpu().unique() # tensor version
             unique_labels = np.unique(detections[:, -1])  # numpy version
-            n_cls_preds = len(unique_labels)
+            n_cls_idxs = len(unique_labels)
 
-            # bbox_colors = random.sample(colors, n_cls_preds) # this makes color changes. not good.
+            # bbox_colors = random.sample(colors, n_cls_idxs) # this makes color changes. not good.
             bbox_colors = colors
 
-            for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
+            for x1, y1, x2, y2, conf, cls_conf, cls_idx in detections:
                 if if_print:
                     print("\t+ Label: %s, Conf: %.5f" %
-                          (classes[int(cls_pred)], cls_conf.item()))
+                          (classes[int(cls_idx)], cls_conf.item()))
                 color = bbox_colors[int(
-                    np.where(unique_labels == int(cls_pred))[0])].tolist()
+                    np.where(unique_labels == int(cls_idx))[0])].tolist()
                 xc, yc = (x1+x2)/2, (y1+y2)/2
 
                 # Draw rectangular
@@ -242,7 +242,7 @@ class Yolo_Detection_Plotter_CV2(object):
                 # Draw text
                 put_text_with_background_color(
                     img,
-                    text=classes[int(cls_pred)],
+                    text=classes[int(cls_idx)],
                     text_pos=(x1, y1),
                     text_color=(255, 255, 255),  # white
                     bg_color=color,

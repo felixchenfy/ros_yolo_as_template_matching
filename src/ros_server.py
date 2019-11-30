@@ -4,8 +4,13 @@
 from __future__ import division
 
 '''
-ROS server for object detection:
-Input: ROS topic of image.
+ROS server for YOLO:
+Input/output from/to ROS topics.
+
+Input: image.
+
+Output: (1) image with detection results.
+        (2) Detection results. (See `msg/DetectionResults.msg`.)
 '''
 
 # -- Torch
@@ -77,6 +82,7 @@ def set_inputs():
     args = parser.parse_args()
     return args
 
+
 class DetectionResultsPublisher(object):
     def __init__(self, topic_name, queue_size=10):
         self._pub = rospy.Publisher(
@@ -88,29 +94,31 @@ class DetectionResultsPublisher(object):
             detections {list of PlaneParam}
         '''
         int32 N                 # Number of detected objects.
+
+
 string label            # Nx1. Label of each object.
 float32[] confidence    # Nx1. Confidence of each object. Range=[0, 1].
 float32[] bbox          # Nx4. (x0, y0, x1, y1). Range=[0, 1].
 
-        res = DetectionResults()
-        res.N = len(plane_params)
-        for pp in plane_params:
-            res.norms.extend(pp.w.tolist())
-            res.center_3d.extend(pp.pts_3d_center.tolist())
-            res.center_2d.extend(pp.pts_2d_center.tolist())
-            res.mask_color.extend(pp.mask_color.tolist())
-        self._pub.publish(res)
-        return
+ res = DetectionResults()
+  res.N = len(plane_params)
+   for pp in plane_params:
+        res.norms.extend(pp.w.tolist())
+        res.center_3d.extend(pp.pts_3d_center.tolist())
+        res.center_2d.extend(pp.pts_2d_center.tolist())
+        res.mask_color.extend(pp.mask_color.tolist())
+    self._pub.publish(res)
+    return
+
 
 def main(args):
-    
+
     # -- Input ROS topic.
     sub_img = ColorImageSubscriber(args.src_topic_img)
-    
+
     # -- Output ROS topics.
     pub_img = ColorImagePublisher(args.dst_topic_img)
-    
-    
+
     img = cv2.imread(args.image_filename, cv2.IMREAD_COLOR)
 
     # Init detector
@@ -138,6 +146,7 @@ def main(args):
         os.makedirs(OUTPUT_FOLDER)
     cv2.imwrite(OUTPUT_FOLDER +
                 os.path.basename(args.image_filename), img=img_disp)
+
 
 if __name__ == '__main__':
     node_name = "yolo_detection_server"

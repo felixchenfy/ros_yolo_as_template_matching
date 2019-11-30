@@ -131,8 +131,8 @@ def detetions_to_labels_and_pos(self, detections, classes):
         detections: the output of "detect_targets()" 
     '''
     labels_and_pos = []
-    for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
-        label = classes[int(cls_pred)]
+    for x1, y1, x2, y2, conf, cls_conf, cls_idx in detections:
+        label = classes[int(cls_idx)]
         pos = (int((x1+x2)/2), int((y1+y2)/2))
         labels_and_pos.append((label, pos))
     return labels_and_pos 
@@ -191,7 +191,7 @@ def detect_targets(args_inference, model,
     ):
     '''
     Output:
-        detections: [bbox, conf, cls_conf, cls_pred]
+        detections: [bbox, conf, cls_conf, cls_idx]
             where: bbox = [x1, y1, x2, y2] is represented in the original image coordinate
     '''
         
@@ -204,7 +204,7 @@ def detect_targets(args_inference, model,
     with torch.no_grad():
         imgs_detections = model(imgs_on_gpu)
         
-    N_elements = 7 # format of imgs_detections[jth_img]: x1, y1, x2, y2, conf, cls_conf, cls_pred
+    N_elements = 7 # format of imgs_detections[jth_img]: x1, y1, x2, y2, conf, cls_conf, cls_idx
     idx_conf = 5
     imgs_detections = non_max_suppression(imgs_detections, args_inference.conf_thres, args_inference.nms_thres)
     
@@ -239,9 +239,9 @@ def detect_targets(args_inference, model,
             detected_objects = set()
             jth_unique_detections = []
             for kth_object in jth_detections:
-                x1, y1, x2, y2, conf, cls_conf, cls_pred = kth_object
-                if cls_pred not in detected_objects: # Add object if not detected before
-                    detected_objects.add(cls_pred)
+                x1, y1, x2, y2, conf, cls_conf, cls_idx = kth_object
+                if cls_idx not in detected_objects: # Add object if not detected before
+                    detected_objects.add(cls_idx)
                     jth_unique_detections.append(kth_object)
             imgs_detections[jth_img] = jth_unique_detections
     
@@ -264,7 +264,7 @@ class ObjDetector(object):
             cv2_img {a clor image read from cv2.imread}
         Return:
             detections {2d list}: Each element is a 1D list indicating the detected object
-                                  [[x1, y1, x2, y2, conf, cls_conf, cls_pred], [...], ...],
+                                  [[x1, y1, x2, y2, conf, cls_conf, cls_idx], [...], ...],
                                   where (x1, yi) represents in the original image coordinate
                                   
         '''
