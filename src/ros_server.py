@@ -92,7 +92,7 @@ class DetectionResultsPublisher(object):
         res = DetectionResults()
         res.N = len(detections)
         for x1, y1, x2, y2, conf, cls_conf, cls_idx in detections:
-            label = self.classes[int(cls_idx)]
+            label = self._classes[int(cls_idx)]
             confidence = cls_conf
             bbox = [x1, y1, x2, y2]
 
@@ -118,7 +118,7 @@ def main(args):
     # -- Output ROS topics.
     pub_img = ColorImagePublisher(args.dst_topic_img)
     rospy.loginfo("Publish result image to: " + args.src_topic_img)
-    pub_res = DetectionResults(args.dst_topic_res, classes)
+    pub_res = DetectionResultsPublisher(args.dst_topic_res, classes)
     rospy.loginfo("Publish detection results to: " + args.dst_topic_res)
 
     # -- Subscribe images and detect.

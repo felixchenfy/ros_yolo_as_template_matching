@@ -58,6 +58,43 @@ source s2_train.sh                  # train yolo
 ```
 The trained models will be saved to: `checkpoints/$TIME_OF_TRAINING/`
 
+=====================
+=====================
+=====================
+
+Download images publisher
+```
+cd ~/catkin_ws/src
+git clone https://github.com/felixchenfy/ros_images_publisher
+```
+
+Publish images:
+```
+ROOT=$(rospack find ros_yolo_as_template_matching)
+rosrun ros_images_publisher publish_images.py \
+    --images_folder $ROOT/test_data/images/ \
+    --topic_name test_data/color \
+    --publish_rate 5
+```
+
+Start detection:
+```
+ROOT=$(rospack find ros_yolo_as_template_matching)
+rosrun ros_yolo_as_template_matching ros_server.py \
+    --config_path $ROOT/config/config.yaml \
+    --weights_path $ROOT/weights/yolo_trained.pth \
+    --src_topic_img test_data/color \
+    --dst_topic_img yolo/image \
+    --dst_topic_res yolo/results
+```
+
+You can view the result by something like `rqt_image_view`:
+
+=====================
+=====================
+=====================
+
+
 ## 2.2 Prepare data
 
 ### 2.2.1 Config
