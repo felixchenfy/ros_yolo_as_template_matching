@@ -3,9 +3,9 @@
 # 1. Introduction
 **Abstract:**  
 
-Run 3 simple scripts to (1) synthesize images (by putting few template images onto backgrounds), (2) train YOLOv3, and (3) achieve object detection.
+Run 3 simple scripts to (1) augment data (by putting few template images onto backgrounds), (2) train YOLOv3, and (3) achieve object detection.
 
-It's named `Template Matching` because we are only using a few template images for training).
+It's named `Template Matching` because only a few template images are used for training.
 
 **Support**:
 - **Language**: Python 2 or 3; ROS or not ROS. 
@@ -22,10 +22,10 @@ It's named `Template Matching` because we are only using a few template images f
   <img src = "doc/demo_2.gif" height = "240px">
 </p>
 
-The demo above was trained from:    
+The training data of the above data are: 
 (1) 4 template images.   
-(2) 25 background images downloaded directly from google. 
-By putting templates onto backgrounds, `3000` synthsized images were created, and traiend for `500` epochs. The illustration is shown below.
+(2) 25 background images(homes) downloaded directly from google. 
+By putting templates onto backgrounds, `3000` synthsized images were created, and then traiend for `500` epochs. The workflow is shown below.
 
 **System workflow:**  
 ![](doc/fig1_intro.png)
@@ -34,41 +34,102 @@ By putting templates onto backgrounds, `3000` synthsized images were created, an
 
 **Reference**: The core code of Yolo is copied from [this repo](https://github.com/eriklindernoren/PyTorch-YOLOv3), and is stored in [src/PyTorch_YOLOv3](src/PyTorch_YOLOv3), with slight modifications.
 
-# 2. How to run
 
-## 2.0 Weights and Dependencies 
-1. Download weights. See [weights/README.md](weights/README.md).
-2. Install dependencies. See here: [doc/dependencies.md](doc/dependencies.md).
+# 2. Download Weights and Install Dependencies 
+
+For dependencies, see this file [doc/dependencies.md](doc/dependencies.md).
+
+Download my pretrained weights file for two classes (bottle and meter) from [here](https://drive.google.com/file/d/1rGc64ks2L7OGXQceIh7GXWThglf81fTW/view?usp=sharing) and put it as `weights/yolo_trained.pth`. Then, you can run all the test cases in the next section.   
 
 
-## 2.1 All commands ready to run
+# 3. Tests
+The commands for testing are listed here.
 
-I've prepared the examplar images, settings and codes.  
-You can directly run either one of the following commands:  
+## 3.1. Synthesize images and set up YOLO files
+
 ```
-source s1_main_setup.sh             # synthesize images and set up yolo files
-source s3_inference_images.sh       # detecting objects from webcam, folder, or video.
-source s4_inference_one_image.sh    # detecting objects from an image
+bash s1_main_setup.sh             # synthesize images and set up yolo files
 ```
 
-After synthesizing images and setting yolo by running "source s1_main_setup.sh",  
-You can do the training:  
+which is:
+``` bash
+python main_setup.py                 \
+    --config_file config/config.yaml \
+    --verify_mask           True     \
+    --augment_imgs          True     \
+    --setup_train_test_txt  True     \
+    --setup_yolo            True    
 ```
-source s2_train.sh                  # train yolo
+
+The inputs are [config/](config) and [data/custom1/](data/custom1/); The outputs are the synthesized images and YOLO configurations files in [data/custom1_generated/](data/custom1_generated/).
+
+## 3.2. Train
+```
+bash s2_train.sh                  # train yolo
+```
+which is:
+``` bash
+WEIGHTS_FILE="weights/yolo_trained.pth"
+python src/train.py \
+    --config_file config/config.yaml \
+    --epochs 1000 \
+    --learning_rate 0.0005 \
+    --checkpoint_interval 20 \
+    --pretrained_weights $WEIGHTS_FILE \
+    --batch_size 2 
 ```
 The trained models will be saved to: `checkpoints/$TIME_OF_TRAINING/`
 
-=====================
-=====================
-=====================
+## 3.3. Inference one image
 
-Download images publisher
+```
+bash s4_inference_one_image.sh    # detecting objects from an image
+```
+
+which is:
+``` bash
+python src/detect_one_image.py \
+    --config_path "config/config.yaml" \
+    --weights_path "weights/yolo_trained.pth" \
+    --image_filename "test_data/images/00011.png"
+```
+
+## 3.4. Inference multiple images from webcam, folder, or video file
+
+```
+bash s3_inference_images.sh       # detecting objects from webcam, folder, or video.
+```
+
+which is:
+``` bash
+# -- 1. Select one of the 3 data sources by commenting out the other two
+
+# src_data_type="webcam"
+# image_data_path="none"
+
+# src_data_type="folder"
+# image_data_path="test_data/images/"
+
+src_data_type="video"
+image_data_path="test_data/video.avi"
+
+# -- 2. Detect
+python src/detect_images.py \
+    --config_path "config/config.yaml" \
+    --weights_path "weights/yolo_trained.pth" \
+    --src_data_type $src_data_type \
+    --image_data_path $image_data_path
+```
+
+## 3.5. Inference image from ROS topic
+
+Download ROS images publisher:
 ```
 cd ~/catkin_ws/src
 git clone https://github.com/felixchenfy/ros_images_publisher
 ```
 
-Publish images:
+Publish testing images:
 ```
 ROOT=$(rospack find ros_yolo_as_template_matching)
 rosrun ros_images_publisher publish_images.py \
@@ -77,7 +138,7 @@ rosrun ros_images_publisher publish_images.py \
     --publish_rate 5
 ```
 
-Start detection:
+Start YOLO detection server:
 ```
 ROOT=$(rospack find ros_yolo_as_template_matching)
 rosrun ros_yolo_as_template_matching ros_server.py \
@@ -85,19 +146,15 @@ rosrun ros_yolo_as_template_matching ros_server.py \
     --weights_path $ROOT/weights/yolo_trained.pth \
     --src_topic_img test_data/color \
     --dst_topic_img yolo/image \
-    --dst_topic_res yolo/results
+    --dst_topic_res yolo/results # See `msg/DetectionResults.msg`
 ```
 
-You can view the result by something like `rqt_image_view`:
-
-=====================
-=====================
-=====================
+You can view the result on this topic `yolo/image` by tools like `rqt_image_view`.
 
 
-## 2.2 Prepare data
+## 4. Train Your Own Model
 
-### 2.2.1 Config
+### 4.1. Configuration file
 In [config/config.yaml](config/config.yaml), set the "data_name" and "labels" to yours.
 ```
 data_name: "custom1" # Your data folder will be "data/custom1/"
@@ -107,7 +164,7 @@ labels: ["bottle", "meter"] # class names of the target objects
 Set the "template_aug_effects" to meet your need.  
 The other settings are also illustrated in that yaml file.
 
-### 2.2.2 Folders
+### 4.2. Training data
 Create a folder "data/$data_name/", such as "data/custom1/". Create the following subfolders:
 ```
 data/custom1
@@ -116,7 +173,7 @@ data/custom1
 └── template_mask
 ```
 
-### 2.2.3 template_img
+### 4.2.1. template_img
 Put your template images into [data/custom1/template_img/](data/custom1/template_img/) with a name of "name_index" and suffix of ".jpg" or ".png".  
 ```
 template_img/
@@ -129,7 +186,7 @@ For example, [meter_1.jpg](data/custom1/template_img/meter_1.jpg) as shown in fi
 
 ![doc/fig2_data.png](doc/fig2_data.png)
 
-### 2.2.4 template_mask
+### 4.2.2. template_mask
 Copy the above images to [data/custom1/template_mask/](data/custom1/template_mask/). Use image editing tool to mask them as shown in figure (b) above.
 
 Format 1: Color/Gray image, where white is the object.  
@@ -141,7 +198,7 @@ template_mask/
 ├── meter_1.jpg
 └── meter_2.png
 ```
-### 2.2.5 background
+### 4.2.3. background
 
 I downloaded 25 images from google by using [googleimagesdownload](https://github.com/hardikvasa/google-images-download) and the command:
 > $ googleimagesdownload --keywords "room images" --limit 25
@@ -150,20 +207,12 @@ Copy these background images into [data/custom1/template_mask/](data/custom1/bac
 
 It'll be better to add the background images of your own scenes, which increases the detection precision.
 
-## 2.3 Synthesize images and setup yolo
+## 4.3. Synthesize images and setup yolo
 
 Run:  
-> $ source s1_main_setup.sh
-```
-#!/bin/bash
-python main_setup.py                \
-    --verify_mask           True    \
-    --augment_imgs          True    \
-    --setup_train_test_txt  True    \
-    --setup_yolo            True    
-```
+> $ bash s1_main_setup.sh
 
-This will create the following things:
+This will create following staffs:
 ```
 data/custom1_generated/
 ├── classes.names   # yolo
@@ -178,46 +227,39 @@ data/custom1_generated/
 └── yolo.data       # yolo
 ```
 
-If you want to add your labeled data, you can put your data into the "images/" and "labels/" folder (with the yolo format), and then update the yolo files:
+If you think the synthesized data are not enough and want to add more labeled data, you can put them into the `data/custom1_generated/images` and `data/custom1_generated/labels` folder, and then update the yolo files by:
 
 > $ python main_setup.py --setup_yolo True
 
-## 2.4 Train Yolo
+## 4.4. Train Yolo
 
-> $ source s2_train.sh
+
+
+Download the weights file from here:
 ```
+$ cd weights/  
+$ wget -c https://pjreddie.com/media/files/darknet53.conv.74
+```
+
+Put it to `weights/darknet53.conv.74`. Then, start training:
+
+```
+WEIGHTS_FILE="weights/darknet53.conv.74"
 python src/train.py \
-    --epochs 100 \
-    --learning_rate 0.001 \
-    --checkpoint_interval 10 \
-    --pretrained_weights weights/darknet53.conv.74 \
-    --batch_size 4 
+    --config_file config/config.yaml \
+    --epochs 1000 \
+    --learning_rate 0.0005 \
+    --checkpoint_interval 20 \
+    --pretrained_weights $WEIGHTS_FILE \
+    --batch_size 2 
 ```
-The weights are saved to the [checkpoints/](checkpoints) folder.
 
-## 2.5 Test Detection
+The checkpoints are saved to the [checkpoints/](checkpoints) folder.
 
-### 2.5.1 Detecting multiple images
-For detecting from (1) webcam, (2) folder, or (3) video,  
-please see [s3_inference_images.sh](s3_inference_images.sh).
-
-Select one of the "src_data_type" and "image_data_path", and then run:  
-> $ source s3_inference_images.sh  
-
-The result is saved to [output/](output/) folder.
-
-
-### 2.5.2 Detecting one image
-For detecting from an image, please modify the **image_filename** in [s4_inference_one_image.sh](s4_inference_one_image.sh), and then run:  
-> $ source s4_inference_one_image.sh  
-
-The result is saved to [output/](output/) folder.
-
-
-# 3. Reference
+# 5. Reference
 https://github.com/eriklindernoren/PyTorch-YOLOv3
 
-# 4. Trouble shooting
+# 6. Trouble shooting
 
 * ImportError: bad magic number in 'config': b'\x03\xf3\r\n'  
     $ find . -name \*.pyc -delete 

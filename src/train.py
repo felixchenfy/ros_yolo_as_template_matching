@@ -43,10 +43,13 @@ from torchvision import transforms
 from torch.autograd import Variable
 import torch.optim as optim
 
-def set_training_args(): # Argparser
+def parse_args():
         
     parser = argparse.ArgumentParser()
-
+    
+    parser.add_argument("--config_file", type=str, default=ROOT + "config/config.yaml",
+                        help="path to config file")
+    
     parser.add_argument("--learning_rate", type=float, default=1e-4, help="learning rate")
     parser.add_argument("--epochs", type=int, default=100, help="number of epochs")
     parser.add_argument("--checkpoint_interval", type=int, default=20, help="interval between saving model weights")
@@ -65,8 +68,10 @@ def set_training_args(): # Argparser
     return args 
 
 def set_args():
-    args = cf.SimpleNamespace()
-    configs = read_all_args(ROOT + "config/config.yaml")
+
+    args = parse_args()
+
+    configs = read_all_args(args.config_file)
     
     # 1. Path to model definition file
     # e.g.: "data/custom1_generated/yolo.cfg" 
@@ -77,8 +82,6 @@ def set_args():
     args.f_yolo_data = configs.f_yolo_data 
     
     # 3. Other training settings
-    training_args = set_training_args()
-    args.__dict__.update(training_args.__dict__)
     
     # 4. Folder to save model
     save_model_to = "checkpoints/" + cf.get_readable_time(no_blank=True) + "/"

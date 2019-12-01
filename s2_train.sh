@@ -1,7 +1,7 @@
 #!/bin/bash
-# WEIGHTS_FILE="weights/darknet53.conv.74"
-WEIGHTS_FILE="weights/yolo_trained.pth"
+WEIGHTS_FILE="weights/darknet53.conv.74"
 python src/train.py \
+    --config_file config/config.yaml \
     --epochs 1000 \
     --learning_rate 0.0005 \
     --checkpoint_interval 20 \
