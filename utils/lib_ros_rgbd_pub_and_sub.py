@@ -18,7 +18,7 @@ Subscriber:
 import rospy
 from cv_bridge import CvBridge, CvBridgeError
 
-from sensor_msgs.msg import Image, CameraInfo
+from sensor_msgs.msg import Image, CameraInfo  # This is ROS camera info.
 from std_msgs.msg import Header
 
 import cv2
@@ -113,7 +113,7 @@ class CameraInfoPublisher():
         self._pub = rospy.Publisher(topic_name, CameraInfo, queue_size=5)
 
         # Create default camera info:
-        camera_info = CameraInfo()
+        camera_info = CameraInfo()  # This is ROS camera info. Not mine.
         camera_info.distortion_model = "plumb_bob"
         camera_info.R = [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
         camera_info.D = [0.0, 0.0, 0.0, 0.0, 0.0]
@@ -127,6 +127,7 @@ class CameraInfoPublisher():
         Arguments:
             intrinsic_matrix {1D list or 2D list}: 
                 If 1D list, the data order is: column1, column2, column3.
+                (But ROS is row majored.)
         '''
         # -- Set camera info.
         camera_info = self._default_camera_info
@@ -160,11 +161,15 @@ class CameraInfoPublisher():
         camera_info.height = height
         camera_info.width = width
         if isinstance(intrinsic_matrix, list):
-            K = intrinsic_matrix
-        else:
+            K = intrinsic_matrix # column majored --> row majored.
+            K = [
+                K[0], K[3], K[6], 
+                K[1], K[4], K[7], 
+                K[2], K[5], K[8], 
+            ]
+        else: # row majored.
             K = self._2d_array_to_list(intrinsic_matrix)
         camera_info.K = K
-
         camera_info.P = [
             K[0], K[1], K[2], 0.0,
             K[3], K[4], K[5], 0.0,
