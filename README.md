@@ -39,7 +39,7 @@ By putting templates onto backgrounds, `3000` synthsized images were created, an
 
 For dependencies, see this file [doc/dependencies.md](doc/dependencies.md).
 
-Download my pretrained weights file for two classes (bottle and meter) from [here](https://drive.google.com/file/d/1rGc64ks2L7OGXQceIh7GXWThglf81fTW/view?usp=sharing) and put it as `weights/yolo_trained.pth`. Then, you can run all the test cases in the next section.   
+Download my pretrained weights file for two classes (bottle and meter) from [here](https://drive.google.com/file/d/16WMuJZV0EHQiVDwbJQoOduw7WdCGQu5A/view) and put it as `weights/yolo_trained.pth`. Then, you can run all the test cases in the next section.   
 
 
 # 3. Tests
