@@ -1,6 +1,6 @@
 numpy
 matplotlib
-tensorflow==1.13.1
+tensorflow==2.5.3
 tensorboard==1.13.0
 terminaltables
 pillow
